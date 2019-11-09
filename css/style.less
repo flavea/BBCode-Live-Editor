@@ -207,13 +207,13 @@ hr {
 
         #right {
             border-left: 2px dashed var(--color-2);
-            height: 100%;
+            height: calc(100% - 50px);
             overflow: auto;
         }
 
         #output {
             padding: 30px;
-            height: calc(100% - 120px);
+            height: calc(100% - 60px);
             font-family: 'Noto Sans', sans-serif;
             overflow: auto;
         }
@@ -335,6 +335,9 @@ hr {
         grid-template-areas: "."".";
     }
 
+    #stats {
+        display: block;
+    }
     #stats>div {
         text-align: left !important;
     }
