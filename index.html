@@ -1,0 +1,161 @@
+<html>
+
+<head>
+
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no">
+
+    <title>BBCode Live Editor</title>
+    <meta name="description" content="Simple BB Code live editor.">
+    <link rel="canonical" href="https://bbcode.ilma.dev/" />
+    <link rel="icon" href="icons/icon-128x128.png">
+
+    <meta itemprop="name" content="BBCode Live Editor">
+    <meta itemprop="description" content="A simple and Lightweight BBCode Live Editor">
+    <meta itemprop="image" content="icons/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#fde5cd">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="BBCode Live Editor">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BBCode Live Editor">
+
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png>
+    <link rel=" apple-touch-icon" sizes="72x72" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
+
+    <meta name="msapplication-TileImage" content="icons/icon-192x192.png">
+    <meta name="msapplication-TileColor" content="#fde5cd">
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <meta property="og:site_name" content="BBCode Live Editor">
+    <meta property="og:url" content="https://bbcode.ilma.dev">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="BBCode Live Editor">
+    <meta property="og:description" content="A simple and Lightweight BBCode Live Editor">
+    <meta property="og:image" content="icons/icon-192x192.png">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@iarifiany">
+    <meta name="twitter:creator" content="@iarifiany">
+    <meta name="twitter:url" content="https://bbcode.ilma.dev">
+    <meta name="twitter:title" content="BBCode Live Editor">
+    <meta name="twitter:description" content="A simple and Lightweight BBCode Live Editor">
+    <meta name="twitter:image" content="icons/icon-192x192.png">
+
+    <link href="css/fonts.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/fa.css">
+    <link rel="stylesheet/less" type="text/css" href="css/style.less" />
+    <script src="scripts/less.min.js"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('sw.js').then(function (registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration
+                        .scope);
+                }).catch(function (err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+</head>
+
+<body class="day">
+    <div id="container">
+        <div id="buttons">
+            <button class="fas fa-bold" onclick="apply('bold')" title="Bold"></button>
+            <button class="fas fa-italic" onclick="apply('italic')" title="Italic"></button>
+            <button class="fas fa-strikethrough" onclick="apply('strike')" title="Strikethrough"></button>
+            <button class="fas fa-underline" onclick="apply('underline')" title="Underline"></button>
+            <button class="fas fa-align-center" onclick="apply('align', 'center')" title="Center"></button>
+            <button class="fas fa-align-right" onclick="apply('align', 'right')" title="Right"></button>
+            <button class="fas fa-align-justify" onclick="apply('align', 'justify')" title="Justify"></button>
+            <button class="fas fa-list" onclick="apply('list')" title="List Opener"></button>
+            <button onclick="apply('li')" title="List Points">●</button>
+            <button class="fas fa-quote-right" onclick="apply('quote')" title="Quote"></button>
+            <button class="fas fa-code" onclick="apply('code')" title="Code"></button>
+            <button class="fas fa-link" onclick="apply('link')" title="Link"></button>
+            <button onclick="apply('image')" title="Image">IMG</button>
+            <button onclick="apply('hr')" title="Horizontal rule">—</button>
+            <button class="fas fa-table" onclick="apply('table')" title="Table"></button>
+            <button onclick="apply('html')" title="HTML">DOHTML</button>
+            <button onclick="apply('roll')" title="Dice Roll">ROLL</button>
+            <button onclick="showMention()" title="Dice Roll">@Mention</button>
+            <select name="font" onchange="apply('font', this.options[this.selectedIndex].value)">
+                <option value="Arial" style="font-family:Arial">Arial</option>
+                <option value="Times" style="font-family:Times">Times</option>
+                <option value="Courier" style="font-family:Courier">Courier</option>
+                <option value="Impact" style="font-family:Impact">Impact</option>
+                <option value="Geneva" style="font-family:Geneva">Geneva</option>
+                <option value="Optima" style="font-family:Optima">Optima</option>
+                <option value="Pattaya" style="font-family: Pattaya;">Pattaya</option>
+                <option value="Pacifico" style="font-family: Pacifico;">Pacifico</option>
+                <option value="Special Elite" style="font-family: " Special Elite";">Special Elite</option>
+                <option value="Georgia" style="font-family: Georgia;">Georgia</option>
+                <option value="Abel" style="font-family: Abel;">Abel</option>
+                <option value="Ropa Sans" style="font-family: " Ropa Sans";">Ropa Sans</option>
+                <option value="Lato" style="font-family: Lato;">Lato</option>
+                <option value="Noto Sans" style="font-family: " Noto Sans";">Noto Sans</option>
+                <option value="Abril Fatface" style="font-family: " Abril Fatface";">Abril Fatface</option>
+                <option value="Staatliches" style="font-family: Staatliches;">Staatliches</option>
+                <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
+                <option value="Playfair Display" style="font-family: " Playfair Display";">Playfair Display</option>
+                <option value="Source Code Pro" style="font-family: " Source Code Pro";">Source Code Pro</option>
+            </select>
+            <select name="size" onchange="apply('size', this.options[this.selectedIndex].value)">
+                <option value="1">Small</option>
+                <option value="7">Large</option>
+                <option value="14">Largest</option>
+            </select>
+            <div class="color-picker">
+                <div class="flex">Color: <input type="color" id="color" onchange="apply('color')" value="#7d7d7d"></div>
+            </div>
+            <div class="switcher">
+                <input type="checkbox" name="switcher" class="switcher-checkbox" id="theme-changer" checked>
+                <label class="switcher-label" for="theme-changer">
+                    <span class="switcher-inner"></span>
+                    <span class="switcher-switch"></span>
+                </label>
+            </div>
+        </div>
+        <div id="mentions">
+            <p>Mentioning a user, only working for forums that have been set up.</p>
+            <div>
+                <select name="forums" onchange="fetchMembers(this.options[this.selectedIndex].value)">
+                    <option value="eleftheria">Eleftheria I Thanatos</option>
+                </select>
+                <select id="members" members="forums">
+                </select>
+                <button onclick="apply('mention')">Mention</button>
+            </div>
+        </div>
+        <div id="editor" class="grid">
+            <div id="left">
+                <div class="label">Editor</div>
+                <textarea id=input>Look, there are words!</textarea>
+            </div>
+            <div id="right">
+                <div class="label">Preview</div>
+                <div id=output></div>
+            </div>
+        </div>
+        <div id="stats" class="grid">
+            <div>
+                Site created by <a href="https://ilma.dev">Ilma.</a> Inspired by <a href="https://github.com/liyasthomas/marcdown">Marcdown</a> and using base codes from <a href="https://codepen.io/qgustavor/pen/RaZmVR">qgustavor</a>.
+            </div>
+            <div style="text-align:right">
+                <span id="words">0</span> words // <span id="characters">0</span> characters
+            </div>
+        </div>
+    </div>
+    <script src="scripts/parser.js"></script>
+</body>
+
+</html>
