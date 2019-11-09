@@ -166,6 +166,7 @@ hr {
     }
 
     #stats {
+        background: var(--color-1);
         padding: 20px;
         border-top: 2px dashed var(--color-2);
         color: var(--color-2);
@@ -206,11 +207,13 @@ hr {
 
         #right {
             border-left: 2px dashed var(--color-2);
+            height: 100%;
+            overflow: auto;
         }
 
         #output {
             padding: 30px;
-            height: 100%;
+            height: calc(100% - 120px);
             font-family: 'Noto Sans', sans-serif;
             overflow: auto;
         }
