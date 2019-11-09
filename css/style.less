@@ -73,6 +73,15 @@ img {
     max-width: 100%;
 }
 
+code {
+    display: block;
+    background: @color5;
+    color: @color4;
+    padding: 10px;
+    max-height: 300px;
+    overflow: auto;
+}
+
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -220,6 +229,18 @@ img {
             height: calc(100% - 60px);
             font-family: 'Noto Sans', sans-serif;
             overflow: auto;
+
+            .spoiler {
+                font-size: 18px;
+                font-weight: bold;
+                background: var(--color-2);
+                color: var(--color-1);
+                padding: 10px;
+            }
+            .spoiler-content {
+                border: 1px solid var(--color-2);
+                padding: 10px;
+            }
         }
     }
 }

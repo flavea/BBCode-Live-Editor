@@ -54,17 +54,15 @@ const tagInfo = [
     // spoiler
     function (arg, content) {
         let el = document.createElement('div')
-        el.textContent = (arg || 'Spoiler') + ' '
-        let toggleImg = document.createElement('img')
+        let toggleImg = document.createElement('div')
 
-        toggleImg.src = 'images/plus.gif'
-        toggleImg.title = 'Spoiler'
-        toggleImg.alt = ''
+        toggleImg.innerText = 'The following content will be shown as a spoiler:'
+        toggleImg.classList.add('spoiler')
         el.appendChild(toggleImg)
 
         let spoilerDiv = document.createElement('div')
+        spoilerDiv.classList.add('spoiler-content')
         spoilerDiv.appendChild(parse(content))
-        spoilerDiv.style.display = 'none'
         el.appendChild(spoilerDiv)
 
         return el
@@ -348,8 +346,8 @@ const apply = (code, type = null) => {
             after = ''
             break
         case 'code':
-            before = '[/code]'
-            after = '[code]'
+            before = '[code]'
+            after = '[/code]'
             break
         case 'link':
             before = '[url=URL]'
