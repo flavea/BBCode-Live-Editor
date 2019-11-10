@@ -68,61 +68,64 @@
 </head>
 
 <body class="day">
+    <div class="switcher">
+        <input type="checkbox" name="switcher" class="switcher-checkbox" id="theme-changer" checked>
+        <label class="switcher-label" for="theme-changer">
+            <span class="switcher-inner"></span>
+            <span class="switcher-switch"></span>
+        </label>
+    </div>
     <div id="container">
         <div id="buttons">
-            <button class="fas fa-bold" onclick="apply('bold')" title="Bold"></button>
-            <button class="fas fa-italic" onclick="apply('italic')" title="Italic"></button>
-            <button class="fas fa-strikethrough" onclick="apply('strike')" title="Strikethrough"></button>
-            <button class="fas fa-underline" onclick="apply('underline')" title="Underline"></button>
-            <button class="fas fa-align-center" onclick="apply('align', 'center')" title="Center"></button>
-            <button class="fas fa-align-right" onclick="apply('align', 'right')" title="Right"></button>
-            <button class="fas fa-align-justify" onclick="apply('align', 'justify')" title="Justify"></button>
-            <button class="fas fa-list" onclick="apply('list')" title="List Opener"></button>
-            <button onclick="apply('li')" title="List Points">●</button>
-            <button class="fas fa-quote-right" onclick="apply('quote')" title="Quote"></button>
-            <button class="fas fa-code" onclick="apply('code')" title="Code"></button>
-            <button class="fas fa-link" onclick="apply('link')" title="Link"></button>
-            <button onclick="apply('image')" title="Image">IMG</button>
-            <button onclick="apply('hr')" title="Horizontal rule">—</button>
-            <button class="fas fa-table" onclick="apply('table')" title="Table"></button>
-            <button onclick="apply('html')" title="HTML">DOHTML</button>
-            <button onclick="apply('roll')" title="Dice Roll">ROLL</button>
-            <button onclick="showMention()" title="Dice Roll">@Mention</button>
-            <select name="font" onchange="apply('font', this.options[this.selectedIndex].value)">
-                <option value="Arial" style="font-family:Arial">Arial</option>
-                <option value="Times" style="font-family:Times">Times</option>
-                <option value="Courier" style="font-family:Courier">Courier</option>
-                <option value="Impact" style="font-family:Impact">Impact</option>
-                <option value="Geneva" style="font-family:Geneva">Geneva</option>
-                <option value="Optima" style="font-family:Optima">Optima</option>
-                <option value="Pattaya" style="font-family: Pattaya;">Pattaya</option>
-                <option value="Pacifico" style="font-family: Pacifico;">Pacifico</option>
-                <option value="Special Elite" style="font-family: " Special Elite";">Special Elite</option>
-                <option value="Georgia" style="font-family: Georgia;">Georgia</option>
-                <option value="Abel" style="font-family: Abel;">Abel</option>
-                <option value="Ropa Sans" style="font-family: " Ropa Sans";">Ropa Sans</option>
-                <option value="Lato" style="font-family: Lato;">Lato</option>
-                <option value="Noto Sans" style="font-family: " Noto Sans";">Noto Sans</option>
-                <option value="Abril Fatface" style="font-family: " Abril Fatface";">Abril Fatface</option>
-                <option value="Staatliches" style="font-family: Staatliches;">Staatliches</option>
-                <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
-                <option value="Playfair Display" style="font-family: " Playfair Display";">Playfair Display</option>
-                <option value="Source Code Pro" style="font-family: " Source Code Pro";">Source Code Pro</option>
-            </select>
-            <select name="size" onchange="apply('size', this.options[this.selectedIndex].value)">
-                <option value="1">Small</option>
-                <option value="7">Large</option>
-                <option value="14">Largest</option>
-            </select>
-            <div class="color-picker">
-                <div class="flex">Color: <input type="color" id="color" onchange="apply('color')" value="#7d7d7d"></div>
-            </div>
-            <div class="switcher">
-                <input type="checkbox" name="switcher" class="switcher-checkbox" id="theme-changer" checked>
-                <label class="switcher-label" for="theme-changer">
-                    <span class="switcher-inner"></span>
-                    <span class="switcher-switch"></span>
-                </label>
+            <div>
+                <button class="fas fa-bold" onclick="apply('bold')" title="Bold"></button>
+                <button class="fas fa-italic" onclick="apply('italic')" title="Italic"></button>
+                <button class="fas fa-strikethrough" onclick="apply('strike')" title="Strikethrough"></button>
+                <button class="fas fa-underline" onclick="apply('underline')" title="Underline"></button>
+                <button class="fas fa-align-center" onclick="apply('align', 'center')" title="Center"></button>
+                <button class="fas fa-align-right" onclick="apply('align', 'right')" title="Right"></button>
+                <button class="fas fa-align-justify" onclick="apply('align', 'justify')" title="Justify"></button>
+                <button class="fas fa-list" onclick="apply('list')" title="List Opener"></button>
+                <button onclick="apply('li')" title="List Points">●</button>
+                <button class="fas fa-quote-right" onclick="apply('quote')" title="Quote"></button>
+                <button class="fas fa-code" onclick="apply('code')" title="Code"></button>
+                <button class="fas fa-link" onclick="apply('link')" title="Link"></button>
+                <button onclick="apply('image')" title="Image">IMG</button>
+                <button onclick="apply('hr')" title="Horizontal rule">—</button>
+                <button class="fas fa-table" onclick="apply('table')" title="Table"></button>
+                <button onclick="apply('html')" title="HTML">DOHTML</button>
+                <button onclick="apply('roll')" title="Dice Roll">ROLL</button>
+                <button onclick="showMention()" title="Dice Roll">@Mention</button>
+                <select name="font" onchange="apply('font', this.options[this.selectedIndex].value)">
+                    <option value="Arial" style="font-family:Arial">Arial</option>
+                    <option value="Times" style="font-family:Times">Times</option>
+                    <option value="Courier" style="font-family:Courier">Courier</option>
+                    <option value="Impact" style="font-family:Impact">Impact</option>
+                    <option value="Geneva" style="font-family:Geneva">Geneva</option>
+                    <option value="Optima" style="font-family:Optima">Optima</option>
+                    <option value="Pattaya" style="font-family: Pattaya;">Pattaya</option>
+                    <option value="Pacifico" style="font-family: Pacifico;">Pacifico</option>
+                    <option value="Special Elite" style="font-family: " Special Elite";">Special Elite</option>
+                    <option value="Georgia" style="font-family: Georgia;">Georgia</option>
+                    <option value="Abel" style="font-family: Abel;">Abel</option>
+                    <option value="Ropa Sans" style="font-family: " Ropa Sans";">Ropa Sans</option>
+                    <option value="Lato" style="font-family: Lato;">Lato</option>
+                    <option value="Noto Sans" style="font-family: " Noto Sans";">Noto Sans</option>
+                    <option value="Abril Fatface" style="font-family: " Abril Fatface";">Abril Fatface</option>
+                    <option value="Staatliches" style="font-family: Staatliches;">Staatliches</option>
+                    <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
+                    <option value="Playfair Display" style="font-family: " Playfair Display";">Playfair Display</option>
+                    <option value="Source Code Pro" style="font-family: " Source Code Pro";">Source Code Pro</option>
+                </select>
+                <select name="size" onchange="apply('size', this.options[this.selectedIndex].value)">
+                    <option value="1">Small</option>
+                    <option value="7">Large</option>
+                    <option value="14">Largest</option>
+                </select>
+                <div class="color-picker">
+                    <div class="flex">Color: <input type="color" id="color" onchange="apply('color')" value="#7d7d7d">
+                    </div>
+                </div>
             </div>
         </div>
         <div id="mentions">
@@ -136,7 +139,7 @@
                 <button onclick="apply('mention')">Mention</button>
             </div>
         </div>
-        <div id="editor" class="grid">
+        <div id="editor" class="flex">
             <div id="left">
                 <div class="label">Editor</div>
                 <textarea id=input>Look, there are words!</textarea>
@@ -146,9 +149,11 @@
                 <div id=output></div>
             </div>
         </div>
-        <div id="stats" class="grid">
+        <div id="stats">
             <div>
-                Site created by <a href="https://ilma.dev">Ilma.</a> Inspired by <a href="https://github.com/liyasthomas/marcdown">Marcdown</a> and using base codes from <a href="https://codepen.io/qgustavor/pen/RaZmVR">qgustavor</a>.
+                Site created by <a href="https://ilma.dev">Ilma.</a> Inspired by <a
+                    href="https://github.com/liyasthomas/marcdown">Marcdown</a> and using base codes from <a
+                    href="https://codepen.io/qgustavor/pen/RaZmVR">qgustavor</a>.
             </div>
             <div style="text-align:right">
                 <span id="words">0</span> words // <span id="characters">0</span> characters
