@@ -248,7 +248,6 @@ code {
             overflow: auto;
 
             .spoiler {
-                font-size: 18px;
                 font-weight: bold;
                 background: var(--color-2);
                 color: var(--color-1);
@@ -354,12 +353,16 @@ code {
 @media (max-width: 800px) {
     #buttons {
         &>div {
-            width: calc(100% - 30px)!important;
+            width: calc(100% - 10px)!important;
         }
     }
 
     #editor {
         flex-direction: column;
+    }
+
+    #left, #right {
+        height: 50%!important;
     }
 
     #right {
@@ -374,22 +377,20 @@ code {
     }
 
     .switcher {
-        bottom: 30px !important;
+        bottom: 10px !important;
     }
 }
 
 @media (max-width: 500px) {
-    .grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
-        grid-template-areas: "."".";
-    }
-
     #stats {
         display: block;
     }
 
     #stats>div {
         text-align: left !important;
+    }
+
+    #stats>div:first-child {
+        display: none;
     }
 }
