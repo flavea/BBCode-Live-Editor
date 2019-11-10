@@ -4,6 +4,12 @@
 @color4: #222;
 @color5: #fff;
 
+* {
+    box-sizing: border-box;
+    outline: 0;
+    border: 0;
+}
+
 .day {
     --color-1: @color1;
     --color-2: @color2;
@@ -47,6 +53,8 @@ body {
     margin: 0;
     padding: 0;
     font-size: 16px;
+    height: 100vh;
+    width: 100%;
     font-family: 'Source Code Pro', 'Consolas', monospace;
     line-height: 160%;
     color: var(--text)
@@ -94,7 +102,7 @@ code {
 #container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     width: 100%;
 
     button {
@@ -199,7 +207,7 @@ code {
         #left,
         #right {
             width: 100%;
-            height: calc(100% - 50px);
+            height: 100%;
             padding-top: 50px;
             position: relative;
         }
@@ -209,7 +217,7 @@ code {
             left: 0;
             position: absolute;
             background: var(--color-1);
-            width: calc(100% - 40px);
+            width: calc(100% - 20px);
             padding: 10px;
             font-weight: bold;
             color: var(--color-2);
@@ -229,13 +237,13 @@ code {
 
         #right {
             border-left: 2px dashed var(--color-2);
-            height: calc(100% - 50px);
+            height: 100%;
             overflow: auto;
         }
 
         #output {
             padding: 30px;
-            height: calc(100% - 60px);
+            height: 100%;
             font-family: 'Noto Sans', sans-serif;
             overflow: auto;
 
@@ -317,7 +325,7 @@ code {
 
 .switcher-switch {
     display: block;
-    width: 8px;
+    width: 12px;
     margin: 11px;
     background: @color3;
     position: absolute;

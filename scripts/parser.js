@@ -415,7 +415,6 @@ const showMention = () => {
         document.getElementById('mentions').style.display = "none"
     } else {
         document.getElementById('mentions').style.display = "block"
-        fetchMembers()
     }
 }
 
@@ -475,7 +474,6 @@ if (localStorage && localStorage.content) {
     input.value = localStorage.content
 }
 
-render()
 themeChanger.addEventListener('change', switchTheme, false)
 input.oninput = render
 
@@ -498,13 +496,5 @@ output.onscroll = function () {
     outputScrollSync = false
 }
 
-var data = null;
-
-var xhr = new XMLHttpRequest();
-xhr.withCredentials = true;
-
-xhr.addEventListener("readystatechange", function () {
-    if (this.readyState === 4) {
-        console.log(this.responseText);
-    }
-});
+render()
+fetchMembers()
