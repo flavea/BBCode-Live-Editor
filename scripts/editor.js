@@ -94,7 +94,7 @@ const editor = {
         }
         parser.render()
     },
-    showMention: function()  {
+    showMention: function () {
         const shownStatus = document.getElementById('mentions').style.display
         if (shownStatus === 'block') {
             document.getElementById('mentions').style.display = "none"
@@ -102,7 +102,7 @@ const editor = {
             document.getElementById('mentions').style.display = "block"
         }
     },
-    fetchMembers: function(forum = 'eleftheria') {
+    fetchMembers: function (forum = 'eleftheria') {
         const members = document.getElementById('members')
         members.innerHTML = 'Loading...'
         let url = ''
@@ -126,5 +126,26 @@ const editor = {
         }).catch(function (err) {
             console.warn('Something went wrong.', err)
         })
+    },
+    shortcuts: function (e) {
+        if (e.ctrlKey && e.which == 66) {
+            editor.apply('bold')
+        } else if (e.ctrlKey && e.shiftKey && e.which == 85) {
+            editor.apply('underline')
+        } else if (e.ctrlKey && e.which == 73) {
+            editor.apply('italic')
+        } else if (e.ctrlKey && e.which == 69) {
+            editor.apply('align', 'center')
+        } else if (e.ctrlKey && e.shiftKey && e.which == 82) {
+            editor.apply('align', 'right')
+        } else if (e.ctrlKey && e.shiftKey && e.which == 74) {
+            editor.apply('align', 'justify')
+        } else if (e.ctrlKey && e.shiftKey && e.which == 76) {
+            editor.apply('link')
+        }
+    },
+    init: function () {
+        document.onkeyup = editor.shortcuts
+        editor.fetchMembers()
     }
 }

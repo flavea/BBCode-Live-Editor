@@ -6,6 +6,7 @@
 * Sync Scrolling
 * Light/Dark Theme
 * Changing editor and preview font and font size
+* Shortcuts
 * Can be installed as a PWA
 
 **Credits**

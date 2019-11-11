@@ -145,8 +145,9 @@
                         <span class="switcher-switch"></span>
                     </label>
                 </div>
-                <a id="setting-button" onclick="modal.open('setting')"><i class="fas fa-cog"></i> setting</a>
-                <a id="info-button" onclick="modal.open('info')"><i class="fas fa-info-circle"></i> info</a>
+                <a class="s-button" onclick="modal.open('setting')"><i class="fas fa-cog"></i> setting</a>
+                <a class="s-button" onclick="modal.open('shortcuts')"><i class="fas fa-arrow-right"></i> shortcuts</a>
+                <a class="s-button" onclick="modal.open('info')"><i class="fas fa-info-circle"></i> info</a>
             </div>
             <div style="text-align:right">
                 <span id="words">0</span> words // <span id="characters">0</span> characters
@@ -221,13 +222,31 @@
             <button id="reload">Update</button>
         </div>
     </div>
+    <div id="shortcuts" class="modal flex">
+        <div class="modal-content">
+            <div class="modal-close fas fa-times" onclick="modal.close()"></div>
+            <div class="modal-title">
+                Shortcuts
+            </div>
+            Use below combinations for shortcuts
+            <ul>
+                <li><b>CTRL + B</b> for bolding text</li>
+                <li><b>CTRL + I</b> for italizing text</li>
+                <li><b>CTRL + E</b> for centering text</li>
+                <li><b>CTRL + SHIFT + U</b> for underlining text</li>
+                <li><b>CTRL + SHIFT + R</b> for aligning text to the right</li>
+                <li><b>CTRL + SHIFT + J</b> for justifying text</li>
+                <li><b>CTRL + SHIFT + L</b> for inserting link</li>
+            </ul>
+        </div>
+    </div>
     <script src="scripts/parser.js"></script>
     <script src="scripts/editor.js"></script>
     <script src="scripts/theme.js"></script>
     <script src="scripts/modal.js"></script>
     <script>
         parser.init()
-        editor.fetchMembers()
+        editor.init()
         theme.init()
 
         let newWorker
