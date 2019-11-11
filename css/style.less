@@ -55,7 +55,7 @@ body {
     font-size: 16px;
     height: 100vh;
     width: 100%;
-    font-family: 'Source Code Pro', 'Consolas', monospace;
+    font-family: 'Noto Sans', sans-serif;
     line-height: 160%;
     color: var(--text)
 }
@@ -169,9 +169,9 @@ code {
 
     #buttons {
         border-bottom: 2px dashed var(--color-2);
-        
+        font-family: 'Source Code Pro', 'Consolas', monospace;
+
         &>div {
-            width: calc(100% - 150px);
             padding: 10px;
             overflow-x: auto;
             overflow-y: hidden;
@@ -183,14 +183,13 @@ code {
             align-items: center;
         }
     }
-    
+
 
     #stats {
         background: var(--color-1);
         padding: 10px 20px;
         border-top: 2px dashed var(--color-2);
         color: var(--color-2);
-        font-size: 12px;
         font-weight: bold;
         display: flex;
         flex-direction: row;
@@ -233,6 +232,8 @@ code {
             border: none;
             color: var(--text);
             font-size: 16px;
+            font-family: 'Source Code Pro', 'Consolas', monospace;
+            line-height: 160%;
         }
 
         #right {
@@ -262,15 +263,76 @@ code {
     }
 }
 
-.switcher {
+.modal {
     position: fixed;
-    right: 20px;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    top: 0;
+    left: 0;
+    display: none;
+
+    .modal-content {
+        background: var(--color-1);
+        padding: 30px;
+        border-radius: 15px;
+        width: 50%;
+        position: relative;
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            cursor: pointer;
+            right: 10px
+        }
+
+        .modal-title {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 1em;
+        }
+
+        .modal-title,
+        label {
+            color: var(--color-2);
+            font-weight: bold;
+        }
+
+        select,
+        input {
+            display: block;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid var(--color-2);
+            background: var(--color-1);
+            width: 100%;
+            font-family: 'Noto Sans', sans-serif;
+            color: var(--color-2)
+        }
+
+
+    }
+}
+
+#setting-button,
+#info-button {
+    color: var(--color-2);
+    border: 2px solid var(--color-2);
+    border-radius: 30px;
+    display: block;
+    padding: 2px 10px;
+    margin: 0 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.switcher {
     width: 100px;
-    float: right;
+    position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    z-index: 999999999;
 }
 
 .switcher-checkbox {
@@ -302,7 +364,6 @@ code {
     line-height: 30px;
     font-size: 12px;
     color: white;
-    font-family: Trebuchet, Arial, sans-serif;
     font-weight: bold;
     box-sizing: border-box;
 }
@@ -344,16 +405,10 @@ code {
     right: 0px;
 }
 
-@media (min-width: 1360px) {
-    .switcher {
-        top: 10px;
-    }
-}
-
 @media (max-width: 800px) {
     #buttons {
         &>div {
-            width: calc(100% - 10px)!important;
+            width: calc(100% - 10px) !important;
         }
     }
 
@@ -361,8 +416,9 @@ code {
         flex-direction: column;
     }
 
-    #left, #right {
-        height: 50%!important;
+    #left,
+    #right {
+        height: 50% !important;
     }
 
     #right {
@@ -371,13 +427,15 @@ code {
     }
 
     #stats {
-        width: calc(100% - 150px);
         border-top: none !important;
-        flex-direction: column-reverse!important;
+        flex-direction: column-reverse !important;
     }
 
-    .switcher {
-        bottom: 10px !important;
+    .modal {
+        .modal-content {
+            background: var(--color-1);
+            width: 80%;
+        }
     }
 }
 
@@ -388,9 +446,6 @@ code {
 
     #stats>div {
         text-align: left !important;
-    }
-
-    #stats>div:first-child {
-        display: none;
+        margin: 5px 0;
     }
 }

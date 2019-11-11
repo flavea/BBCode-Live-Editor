@@ -13,7 +13,8 @@
 
     <meta itemprop="name" content="BBCode Live Editor">
     <meta itemprop="description" content="A simple and Lightweight BBCode Live Editor">
-    <meta name="keywords" content="bbcode, bb code, live editor, bbcode live editor, bbcode wywsig, bbcode editor, bbcode, jcink, forums, bulletin board, bulletin board code">
+    <meta name="keywords"
+        content="bbcode, bb code, live editor, bbcode live editor, bbcode wywsig, bbcode editor, bbcode, jcink, forums, bulletin board, bulletin board code">
     <meta itemprop="image" content="icons/icon-192x192.png">
     <link rel="manifest" href="manifest.json">
 
@@ -39,7 +40,8 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="BBCode Live Editor">
     <meta property="og:description" content="A simple and Lightweight BBCode Live Editor">
-    <meta property="og:image" content="https://res.cloudinary.com/ilma/image/upload/v1573411865/bbcodeicons/icon-128x128_vjkhb7.png">
+    <meta property="og:image"
+        content="https://res.cloudinary.com/ilma/image/upload/v1573411865/bbcodeicons/icon-128x128_vjkhb7.png">
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@iarifiany">
@@ -47,57 +49,40 @@
     <meta name="twitter:url" content="https://bbcode.ilma.dev">
     <meta name="twitter:title" content="BBCode Live Editor">
     <meta name="twitter:description" content="A simple and Lightweight BBCode Live Editor">
-    <meta name="twitter:image" content="https://res.cloudinary.com/ilma/image/upload/v1573411865/bbcodeicons/icon-128x128_vjkhb7.png">
+    <meta name="twitter:image"
+        content="https://res.cloudinary.com/ilma/image/upload/v1573411865/bbcodeicons/icon-128x128_vjkhb7.png">
 
     <link href="css/fonts.css" rel="stylesheet">
     <link rel="stylesheet" href="css/fa.css">
     <link rel="stylesheet/less" type="text/css" href="css/style.less" />
     <script src="scripts/less.min.js"></script>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('sw.js').then(function (registration) {
-                    console.log('ServiceWorker registration successful with scope: ', registration
-                        .scope);
-                }).catch(function (err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
-        }
-    </script>
 </head>
 
 <body class="day">
-    <div class="switcher">
-        <input type="checkbox" name="switcher" class="switcher-checkbox" id="theme-changer" checked>
-        <label class="switcher-label" for="theme-changer">
-            <span class="switcher-inner"></span>
-            <span class="switcher-switch"></span>
-        </label>
-    </div>
     <div id="container">
         <div id="buttons">
             <div>
-                <button class="fas fa-bold" onclick="apply('bold')" title="Bold"></button>
-                <button class="fas fa-italic" onclick="apply('italic')" title="Italic"></button>
-                <button class="fas fa-strikethrough" onclick="apply('strike')" title="Strikethrough"></button>
-                <button class="fas fa-underline" onclick="apply('underline')" title="Underline"></button>
-                <button class="fas fa-align-center" onclick="apply('align', 'center')" title="Center"></button>
-                <button class="fas fa-align-right" onclick="apply('align', 'right')" title="Right"></button>
-                <button class="fas fa-align-justify" onclick="apply('align', 'justify')" title="Justify"></button>
-                <button class="fas fa-list" onclick="apply('list')" title="List Opener"></button>
-                <button onclick="apply('li')" title="List Points">●</button>
-                <button class="fas fa-quote-right" onclick="apply('quote')" title="Quote"></button>
-                <button class="fas fa-code" onclick="apply('code')" title="Code"></button>
-                <button class="fas fa-link" onclick="apply('link')" title="Link"></button>
-                <button onclick="apply('image')" title="Image">IMG</button>
-                <button onclick="apply('hr')" title="Horizontal rule">—</button>
-                <button class="fas fa-table" onclick="apply('table')" title="Table"></button>
-                <button onclick="apply('html')" title="HTML">DOHTML</button>
-                <button onclick="apply('roll')" title="Dice Roll">ROLL</button>
-                <button onclick="showMention()" title="Dice Roll">@Mention</button>
-                <select name="font" onchange="apply('font', this.options[this.selectedIndex].value)">
+                <button class="fas fa-bold" onclick="editor.apply('bold')" title="Bold"></button>
+                <button class="fas fa-italic" onclick="editor.apply('italic')" title="Italic"></button>
+                <button class="fas fa-strikethrough" onclick="editor.apply('strike')" title="Strikethrough"></button>
+                <button class="fas fa-underline" onclick="editor.apply('underline')" title="Underline"></button>
+                <button class="fas fa-align-center" onclick="editor.apply('align', 'center')" title="Center"></button>
+                <button class="fas fa-align-right" onclick="editor.apply('align', 'right')" title="Right"></button>
+                <button class="fas fa-align-justify" onclick="editor.apply('align', 'justify')"
+                    title="Justify"></button>
+                <button class="fas fa-list" onclick="editor.apply('list')" title="List Opener"></button>
+                <button onclick="editor.apply('li')" title="List Points">●</button>
+                <button class="fas fa-quote-right" onclick="editor.apply('quote')" title="Quote"></button>
+                <button class="fas fa-code" onclick="editor.apply('code')" title="Code"></button>
+                <button class="fas fa-link" onclick="editor.apply('link')" title="Link"></button>
+                <button onclick="editor.apply('image')" title="Image">IMG</button>
+                <button onclick="editor.apply('hr')" title="Horizontal rule">—</button>
+                <button class="fas fa-table" onclick="editor.apply('table')" title="Table"></button>
+                <button onclick="editor.apply('html')" title="HTML">DOHTML</button>
+                <button onclick="editor.apply('roll')" title="Dice Roll">ROLL</button>
+                <button onclick="editor.spoiler('spoiler')" title="Spoiler">SPOILER</button>
+                <button onclick="editor.showMention()" title="Dice Roll">@MENTION</button>
+                <select name="font" onchange="editor.apply('font', this.options[this.selectedIndex].value)">
                     <option value="Arial" style="font-family:Arial">Arial</option>
                     <option value="Times" style="font-family:Times">Times</option>
                     <option value="Courier" style="font-family:Courier">Courier</option>
@@ -106,25 +91,26 @@
                     <option value="Optima" style="font-family:Optima">Optima</option>
                     <option value="Pattaya" style="font-family: Pattaya;">Pattaya</option>
                     <option value="Pacifico" style="font-family: Pacifico;">Pacifico</option>
-                    <option value="Special Elite" style="font-family: " Special Elite";">Special Elite</option>
+                    <option value="Special Elite" style="font-family: Special Elite">Special Elite</option>
                     <option value="Georgia" style="font-family: Georgia;">Georgia</option>
                     <option value="Abel" style="font-family: Abel;">Abel</option>
-                    <option value="Ropa Sans" style="font-family: " Ropa Sans";">Ropa Sans</option>
+                    <option value="Ropa Sans" style="font-family: Ropa Sans">Ropa Sans</option>
                     <option value="Lato" style="font-family: Lato;">Lato</option>
-                    <option value="Noto Sans" style="font-family: " Noto Sans";">Noto Sans</option>
-                    <option value="Abril Fatface" style="font-family: " Abril Fatface";">Abril Fatface</option>
+                    <option value="Noto Sans" style="font-family: Noto Sans">Noto Sans</option>
+                    <option value="Abril Fatface" style="font-family: Abril Fatface">Abril Fatface</option>
                     <option value="Staatliches" style="font-family: Staatliches;">Staatliches</option>
                     <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
-                    <option value="Playfair Display" style="font-family: " Playfair Display";">Playfair Display</option>
-                    <option value="Source Code Pro" style="font-family: " Source Code Pro";">Source Code Pro</option>
+                    <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
+                    <option value="Source Code Pro" style="font-family: Source Code Pro">Source Code Pro</option>
                 </select>
-                <select name="size" onchange="apply('size', this.options[this.selectedIndex].value)">
+                <select name="size" onchange="editor.apply('size', this.options[this.selectedIndex].value)">
                     <option value="1">Small</option>
                     <option value="7">Large</option>
                     <option value="14">Largest</option>
                 </select>
                 <div class="color-picker">
-                    <div class="flex">Color: <input type="color" id="color" onchange="apply('color')" value="#7d7d7d">
+                    <div class="flex">Color: <input type="color" id="color" onchange="editor.apply('color')"
+                            value="#7d7d7d">
                     </div>
                 </div>
             </div>
@@ -137,13 +123,13 @@
                 </select>
                 <select id="members" members="forums">
                 </select>
-                <button onclick="apply('mention')">Mention</button>
+                <button onclick="editor.apply('mention')">Mention</button>
             </div>
         </div>
         <div id="editor" class="flex">
             <div id="left">
                 <div class="label">Editor</div>
-                <textarea id=input>Look, there are words!</textarea>
+                <textarea id=input>Look, [b]there[/b] are [i]words[/i]!</textarea>
             </div>
             <div id="right">
                 <div class="label">Preview</div>
@@ -151,17 +137,134 @@
             </div>
         </div>
         <div id="stats">
-            <div>
-                Site created by <a href="https://ilma.dev">Ilma.</a> Inspired by <a
-                    href="https://github.com/liyasthomas/marcdown">Marcdown</a> and using base codes from <a
-                    href="https://codepen.io/qgustavor/pen/RaZmVR">qgustavor</a>.
+            <div class="flex">
+                <div class="switcher">
+                    <input type="checkbox" name="switcher" class="switcher-checkbox" id="theme-changer" checked>
+                    <label class="switcher-label" for="theme-changer">
+                        <span class="switcher-inner"></span>
+                        <span class="switcher-switch"></span>
+                    </label>
+                </div>
+                <a id="setting-button" onclick="modal.open('setting')"><i class="fas fa-cog"></i> setting</a>
+                <a id="info-button" onclick="modal.open('info')"><i class="fas fa-info-circle"></i> info</a>
             </div>
             <div style="text-align:right">
                 <span id="words">0</span> words // <span id="characters">0</span> characters
             </div>
         </div>
     </div>
+    <div id="setting" class="modal flex">
+        <div class="modal-content">
+            <div class="modal-close fas fa-times" onclick="modal.close()"></div>
+            <div class="modal-title">
+                Setting
+            </div>
+            <label for="editor-font">Editor Font</label>
+            <select name="editor-font" onchange="theme.changeFont('editor', this.options[this.selectedIndex].value)">
+                <option value="Arial" style="font-family:Arial">Arial</option>
+                <option value="Times" style="font-family:Times">Times</option>
+                <option value="Courier" style="font-family:Courier">Courier</option>
+                <option value="Geneva" style="font-family:Geneva">Geneva</option>
+                <option value="Optima" style="font-family:Optima">Optima</option>
+                <option value="Special Elite" style="font-family: Special Elite>Special Elite</option>
+                <option value=" Georgia" style="font-family: Georgia;">Georgia</option>
+                <option value="Lato" style="font-family: Lato;">Lato</option>
+                <option value="Noto Sans" style="font-family: Noto Sans">Noto Sans</option>
+                <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
+                <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
+                <option value="Source Code Pro" style="font-family: Source Code Pro" selected>Source Code Pro</option>
+            </select>
+            <label for="preview-font">Preview Font</label>
+            <select name="preview-font" onchange="theme.changeFont('preview', this.options[this.selectedIndex].value)">
+                <option value="Arial" style="font-family:Arial">Arial</option>
+                <option value="Times" style="font-family:Times">Times</option>
+                <option value="Courier" style="font-family:Courier">Courier</option>
+                <option value="Geneva" style="font-family:Geneva">Geneva</option>
+                <option value="Optima" style="font-family:Optima">Optima</option>
+                <option value="Special Elite" style="font-family: Special Elite>Special Elite</option>
+                <option value=" Georgia" style="font-family: Georgia;">Georgia</option>
+                <option value="Lato" style="font-family: Lato;">Lato</option>
+                <option value="Noto Sans" style="font-family: Noto Sans" selected>Noto Sans</option>
+                <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
+                <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
+                <option value="Source Code Pro" style="font-family: Source Code Pro">Source Code Pro</option>
+            </select>
+            <label for="font-size">Font Size</label>
+            <input type="number" id="font-size" value="16" onchange="theme.changeFont('size', this.value)">
+        </div>
+    </div>
+    <div id="info" class="modal flex">
+        <div class="modal-content">
+            <div class="modal-close fas fa-times" onclick="modal.close()"></div>
+            <div class="modal-title">
+                Info
+            </div>
+            <p>A BBCode live editor.</p>
+            <ul>
+                <li>Site created by <a href="https://ilma.dev">Ilma.</a></li>
+                <li>Inspired by <a href="https://github.com/liyasthomas/marcdown">Marcdown</a>.</li>
+                <li>Using javascript bbcode rendering from <a
+                        href="https://codepen.io/qgustavor/pen/RaZmVR">qgustavor</a>.
+            </ul>
+            <center><b><u><a href="https://github.com/flavea/BBCode-Live-Editor">Contribute on Github</a></u></b>
+            </center>
+        </div>
+    </div>
+    <div id="update" class="modal flex">
+        <div class="modal-content">
+            <div class="modal-close fas fa-times" onclick="modal.close()"></div>
+            <div class="modal-title">
+                New Update!
+            </div>
+            Please click below button to update:
+
+            <center id="reload"><a><u><b>Update</b></u></a></center>
+        </div>
+    </div>
     <script src="scripts/parser.js"></script>
+    <script src="scripts/editor.js"></script>
+    <script src="scripts/theme.js"></script>
+    <script src="scripts/modal.js"></script>
+    <script>
+        parser.init()
+        editor.fetchMembers()
+        theme.init()
+
+        let newWorker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then((registration) => {
+                    console.log('ServiceWorker registration successful with scope: ', registration
+                        .scope)
+                    registration.addEventListener('updatefound', () => {
+                        newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            switch (newWorker.state) {
+                                case 'installed':
+                                    if (navigator.serviceWorker.controller) {
+                                        modal.open('update')
+                                    }
+                                    break
+                            }
+                        })
+                    })
+                }).catch((err) => console.log('ServiceWorker registration failed: ', err))
+            })
+        }
+
+        let refreshing;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) return
+            window.location.reload()
+            refreshing = true
+        })
+
+        document.getElementById('reload').addEventListener('click', () => {
+            newWorker.postMessage({
+                action: 'skipWaiting'
+            });
+        })
+    </script>
 </body>
 
 </html>

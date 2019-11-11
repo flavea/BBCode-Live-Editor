@@ -1,15 +1,8 @@
-const input = document.getElementById('input')
-const output = document.getElementById('output')
-const words = document.getElementById('words')
-const characters = document.getElementById('characters')
-const themeChanger = document.getElementById('theme-changer')
-
 const states = [
     /\[/,
     /[=[\]]/,
     /\]/
 ]
-
 const tagList = ['*', 'img', 'url', 'color', 'size', 'font', 'align', 'quote', 'spoiler', 'roll', 'dohtml', 'list', 'hr', 'b', 'i', 'u', 's', 'table', 'tr', 'td', 'code']
 const whitelist = {
     'img': /^https?:\/\//,
@@ -33,7 +26,7 @@ const tagInfo = [
 
         let tmp = document.createElement('div')
         tmp.style.textAlign = arg
-        tmp.appendChild(parse(content))
+        tmp.appendChild(parser.parse(content))
 
         el.appendChild(tmp)
 
@@ -44,7 +37,7 @@ const tagInfo = [
         let el = document.createDocumentFragment()
 
         let tmp = document.createElement('blockquote')
-        tmp.appendChild(parse(content))
+        tmp.appendChild(parser.parse(content))
 
         el.appendChild(tmp)
 
@@ -62,7 +55,7 @@ const tagInfo = [
 
         let spoilerDiv = document.createElement('div')
         spoilerDiv.classList.add('spoiler-content')
-        spoilerDiv.appendChild(parse(content))
+        spoilerDiv.appendChild(parser.parse(content))
         el.appendChild(spoilerDiv)
 
         return el
@@ -104,7 +97,7 @@ const tagInfo = [
 
         let el = document.createDocumentFragment()
         let tmp = document.createElement('b')
-        tmp.appendChild(parse(message))
+        tmp.appendChild(parser.parse(message))
 
         el.appendChild(tmp)
 
@@ -123,378 +116,218 @@ const tagInfo = [
     ['ul']
 ]
 
-const switchTheme = (theme) => {
-    if (themeChanger.checked) {
-        localStorage.theme = "day"
-        document.querySelectorAll("body").forEach(_element => {
-            _element.classList.add('day')
-            _element.classList.remove('night')
-        })
-    } else {
-        localStorage.theme = "night"
-        document.querySelectorAll("body").forEach(_element => {
-            _element.classList.add('night')
-            _element.classList.remove('day')
-        })
-    }
-}
+const parser = {
+    input: document.getElementById('input'),
+    output: document.getElementById('output'),
+    words: document.getElementById('words'),
+    characters: document.getElementById('characters'),
+    parse: function(text) {
+        let oldp = 0
+        let newp = 0
+        let state = 0
+        let result = document.createDocumentFragment()
+        let tagArr = []
+        let attributeArr = []
 
-const parse = (text) => {
-    let oldp = 0
-    let newp = 0
-    let state = 0
-    let result = document.createDocumentFragment()
-    let tagArr = []
-    let attributeArr = []
-
-    function addTextNode(text) {
-        text.split('\n').forEach(function (content, n, arr) {
-            result.appendChild(
-                document.createTextNode(content)
-            )
-
-            if (n !== arr.length - 1) {
-                result.appendChild(document.createElement('br'))
-            }
-        })
-    }
-
-    do {
-        newp = text
-            .substr(oldp)
-            .search(states[state])
-
-        let foundTag = newp !== -1
-        if (foundTag) {
-            newp += oldp
-        } else {
-            newp = text.length
-        }
-
-        let content
-        let tag
-        let closingTag
-        let closingAttr
-        let hasAttributes
-        let tagIndex = -1
-        let foundChar
-
-        switch (state) {
-            case 0:
-                content = text.substring(oldp, newp)
-
-                if (content) addTextNode(content)
-                if (foundTag) state = 1
-                break
-
-            case 1:
-                tag = text.substring(oldp, newp)
-                tagArr.push(tag)
-
-                foundChar = text.charAt(newp)
-
-                if (foundChar === '[') {
-                    addTextNode('[')
-                    break
-                }
-
-                hasAttributes = foundChar === '='
-
-                if (!hasAttributes) {
-                    attributeArr.push('')
-
-                    if (tag === '*' || tag === 'hr') {
-                        text = text.substr(0, newp + 1) + '[/' + tag + ']' +
-                            text.substr(newp + 1)
-                    }
-                }
-                state = 3 - hasAttributes
-                break
-
-            case 2:
-                attributeArr.push(
-                    text.substring(oldp, newp))
-
-                state = 3
-                break
-        }
-
-        oldp = newp + 1
-
-        if (state === 3) {
-            closingTag = tagArr.pop()
-            closingAttr = attributeArr.pop()
-
-            let endedStartTag = text.indexOf(']', newp)
-            newp = closingTag === 'img' && closingAttr ? endedStartTag : text.indexOf('[/' + closingTag + ']', oldp)
-
-            let openedTag
-            if (newp === -1) {
-                newp = text.length
-                openedTag = true
-            } else {
-                tagIndex = tagList.indexOf(closingTag)
-            }
-
-            content = text.substring(oldp, newp)
-
-            if (tagIndex === -1) {
-                addTextNode('[' + closingTag + (closingAttr ? ('=' + closingAttr) : '') + (endedStartTag === -1 ? '' : ']'))
-                if (content) {
-                    result.appendChild(parse(content))
-                }
-                if (!openedTag) {
-                    addTextNode('[/' + closingTag + ']')
-                }
-            } else if (typeof tagInfo[tagIndex] === 'function') {
-                result.appendChild(tagInfo[tagIndex](closingAttr, content))
-            } else {
-                let info = tagInfo[tagIndex] || []
-                let el = document.createElement(
-                    info[0] || closingTag
+        function addTextNode(text) {
+            text.split('\n').forEach(function (content, n, arr) {
+                result.appendChild(
+                    document.createTextNode(content)
                 )
 
-                let attributes = info[2]
-                if (attributes) {
-                    for (let i in attributes) {
-                        if (attributes.hasOwnProperty(i)) {
-                            el.setAttribute(i, attributes[i])
+                if (n !== arr.length - 1) {
+                    result.appendChild(document.createElement('br'))
+                }
+            })
+        }
+
+        do {
+            newp = text
+                .substr(oldp)
+                .search(states[state])
+
+            let foundTag = newp !== -1
+            if (foundTag) {
+                newp += oldp
+            } else {
+                newp = text.length
+            }
+
+            let content
+            let tag
+            let closingTag
+            let closingAttr
+            let hasAttributes
+            let tagIndex = -1
+            let foundChar
+
+            switch (state) {
+                case 0:
+                    content = text.substring(oldp, newp)
+
+                    if (content) addTextNode(content)
+                    if (foundTag) state = 1
+                    break
+
+                case 1:
+                    tag = text.substring(oldp, newp)
+                    tagArr.push(tag)
+
+                    foundChar = text.charAt(newp)
+
+                    if (foundChar === '[') {
+                        addTextNode('[')
+                        break
+                    }
+
+                    hasAttributes = foundChar === '='
+
+                    if (!hasAttributes) {
+                        attributeArr.push('')
+
+                        if (tag === '*' || tag === 'hr') {
+                            text = text.substr(0, newp + 1) + '[/' + tag + ']' +
+                                text.substr(newp + 1)
                         }
                     }
-                }
+                    state = 3 - hasAttributes
+                    break
 
-                let whitelistConfig = whitelist[closingTag]
-                let attribute
+                case 2:
+                    attributeArr.push(
+                        text.substring(oldp, newp))
 
-                if (closingTag === 'img') {
-                    attribute = closingAttr || content
+                    state = 3
+                    break
+            }
 
-                    if (!whitelistConfig || whitelistConfig.test(attribute)) {
-                        el.setAttribute(info[1], attribute)
-                    } else {
-                        el = document.createTextNode('')
-                    }
-                } else if (closingTag === 'url') {
-                    attribute = closingAttr || content
+            oldp = newp + 1
 
-                    if (!whitelistConfig || whitelistConfig.test(attribute)) {
-                        el.setAttribute(info[1], attribute)
-                        el.appendChild(parse(content))
-                    } else {
-                        el = document.createTextNode('')
-                    }
-                } else if (info[1]) {
-                    el.setAttribute(info[1], closingAttr)
-                    el.appendChild(parse(content))
+            if (state === 3) {
+                closingTag = tagArr.pop()
+                closingAttr = attributeArr.pop()
+
+                let endedStartTag = text.indexOf(']', newp)
+                newp = closingTag === 'img' && closingAttr ? endedStartTag : text.indexOf('[/' + closingTag + ']', oldp)
+
+                let openedTag
+                if (newp === -1) {
+                    newp = text.length
+                    openedTag = true
                 } else {
-                    el.appendChild(parse(content))
+                    tagIndex = tagList.indexOf(closingTag)
                 }
-                result.appendChild(el)
+
+                content = text.substring(oldp, newp)
+
+                if (tagIndex === -1) {
+                    addTextNode('[' + closingTag + (closingAttr ? ('=' + closingAttr) : '') + (endedStartTag === -1 ? '' : ']'))
+                    if (content) {
+                        result.appendChild(parser.parse(content))
+                    }
+                    if (!openedTag) {
+                        addTextNode('[/' + closingTag + ']')
+                    }
+                } else if (typeof tagInfo[tagIndex] === 'function') {
+                    result.appendChild(tagInfo[tagIndex](closingAttr, content))
+                } else {
+                    let info = tagInfo[tagIndex] || []
+                    let el = document.createElement(
+                        info[0] || closingTag
+                    )
+
+                    let attributes = info[2]
+                    if (attributes) {
+                        for (let i in attributes) {
+                            if (attributes.hasOwnProperty(i)) {
+                                el.setAttribute(i, attributes[i])
+                            }
+                        }
+                    }
+
+                    let whitelistConfig = whitelist[closingTag]
+                    let attribute
+
+                    if (closingTag === 'img') {
+                        attribute = closingAttr || content
+
+                        if (!whitelistConfig || whitelistConfig.test(attribute)) {
+                            el.setAttribute(info[1], attribute)
+                        } else {
+                            el = document.createTextNode('')
+                        }
+                    } else if (closingTag === 'url') {
+                        attribute = closingAttr || content
+
+                        if (!whitelistConfig || whitelistConfig.test(attribute)) {
+                            el.setAttribute(info[1], attribute)
+                            el.appendChild(parser.parse(content))
+                        } else {
+                            el = document.createTextNode('')
+                        }
+                    } else if (info[1]) {
+                        el.setAttribute(info[1], closingAttr)
+                        el.appendChild(parser.parse(content))
+                    } else {
+                        el.appendChild(parser.parse(content))
+                    }
+                    result.appendChild(el)
+                }
+
+                oldp = endedStartTag === -1 || openedTag ? text.length : text.indexOf(']', newp) + 1
+                state = 0
             }
+        } while (oldp < text.length)
 
-            oldp = endedStartTag === -1 || openedTag ? text.length : text.indexOf(']', newp) + 1
-            state = 0
+        switch (state) {
+            case 1:
+                addTextNode('[')
+                break
+            case 2:
+                addTextNode('[' + tagArr.pop())
+                break
+            case 3:
+                addTextNode('[' + tagArr.pop() + '=' + attributeArr.pop())
+                break
         }
-    } while (oldp < text.length)
 
-    switch (state) {
-        case 1:
-            addTextNode('[')
-            break
-        case 2:
-            addTextNode('[' + tagArr.pop())
-            break
-        case 3:
-            addTextNode('[' + tagArr.pop() + '=' + attributeArr.pop())
-            break
-    }
-
-    return result
-}
-
-const apply = (code, type = null) => {
-    let input = document.getElementById('input')
-    let before
-    let after
-    switch (code) {
-        case 'bold':
-            before = '[b]'
-            after = '[/b]'
-            break
-        case 'italic':
-            before = '[i]'
-            after = '[/i]'
-            break
-        case 'strike':
-            before = '[s]'
-            after = '[/s]'
-            break
-        case 'underline':
-            before = '[u]'
-            after = '[/u]'
-            break
-        case 'quote':
-            before = '[quote]'
-            after = '[/quote]'
-            break
-        case 'list':
-            before = '[list]'
-            after = '[/list]'
-            break
-        case 'li':
-            before = '[*]'
-            after = ''
-            break
-        case 'code':
-            before = '[code]'
-            after = '[/code]'
-            break
-        case 'link':
-            before = '[url=URL]'
-            after = '[/url]'
-            break
-        case 'image':
-            before = '[img]'
-            after = '[/img]'
-            break
-        case 'hr':
-            before = '[hr]'
-            after = ''
-            break
-        case 'table':
-            before = '[table][tr][td]'
-            after = '[/td][/tr][/table]'
-            break
-        case 'html':
-            before = '[dohtml]'
-            after = '[/dohtml]'
-            break
-        case 'roll':
-            before = '[roll]'
-            after = '[/roll]'
-            break
-        case 'color':
-            const color = document.getElementById('color').value
-            before = `[color=${color}]`
-            after = '[/color]'
-            break
-        case 'size':
-            before = `[size=${type}]`
-            after = '[/size]'
-            break
-        case 'font':
-            before = `[font=${type}]`
-            after = '[/font]'
-            break
-        case 'align':
-            before = `[align=${type}]`
-            after = '[/align]'
-            break
-        case 'mention':
-            before = `@[${document.getElementById('members').value}`
-            after = ']'
-            break
-    }
-    if (document.selection) {
-        input.focus()
-        document.selection.createRange().text = before + document.selection.createRange().text + after
-    } else if (input.selectionStart || input.selectionStart == '0') {
-        let startPos = input.selectionStart
-        let endPos = input.selectionEnd
-        input.value = input.value.substring(0, startPos) + before + input.value.substring(startPos, endPos) + after + input.value.substring(endPos, input.value.length)
-        input.selectionStart = startPos + before.length
-        input.selectionEnd = endPos + before.length
-        input.focus()
-    }
-    render()
-}
-
-const showMention = () => {
-    const shownStatus = document.getElementById('mentions').style.display
-    if (shownStatus === 'block') {
-        document.getElementById('mentions').style.display = "none"
-    } else {
-        document.getElementById('mentions').style.display = "block"
-    }
-}
-
-const fetchMembers = (forum = 'eleftheria') => {
-    const members = document.getElementById('members')
-    members.innerHTML = 'Loading...'
-    let url = ''
-    if (forum === 'eleftheria') url = 'https://rp.prosa.id/emembers?_limit=9999&_sort=Name:ASC'
-    fetch(url).then(function (response) {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return Promise.reject(response);
+        return result
+    },
+    render: function() {
+        localStorage.content = parser.input.value.trim()
+        const result = parser.parse(parser.input.value.trim())
+        parser.output.innerHTML = ''
+        parser.output.appendChild(result)
+        const text = parser.output.innerText
+        parser.characters.innerText = text.length
+        parser.words.innerText = parser.output.innerText.split(' ').length
+    },
+    init: function() {
+        if (localStorage && localStorage.content) {
+            parser.input.value = localStorage.content
         }
-    }).then(function (data) {
-        members.innerHTML = ''
-        data.forEach(member => {
-            let name = member.Name.toLowerCase().split(' ')
-            for (var i = 0; i < name.length; i++) {
-                name[i] = name[i][0].toUpperCase() + name[i].slice(1);
+
+        parser.input.oninput = parser.render
+
+        let inputScrollSync = false
+        let outputScrollSync = false
+
+        parser.input.onscroll = function () {
+            if (!inputScrollSync) {
+                outputScrollSync = true
+                parser.output.scrollTop = this.scrollTop
             }
-            name = name.join(' ')
-            members.innerHTML += `<option value="${name}">${name}</option>`
-        })
-    }).catch(function (err) {
-        console.warn('Something went wrong.', err);
-    });
-}
+            inputScrollSync = false
+        }
 
-const render = () => {
-    localStorage.content = input.value.trim()
-    const result = parse(input.value.trim())
-    output.innerHTML = ''
-    output.appendChild(result)
-    const text = output.innerText
-    characters.innerText = text.length
-    words.innerText = output.innerText.split(' ').length
-}
+        parser.output.onscroll = function () {
+            if (!outputScrollSync) {
+                inputScrollSync = true
+                parser.input.scrollTop = this.scrollTop
+            }
+            outputScrollSync = false
+        }
 
-if (localStorage && localStorage.theme) {
-    if (localStorage.theme === 'day') {
-        themeChanger.checked = true
-        document.querySelectorAll("body").forEach(_element => {
-            _element.classList.add('day')
-            _element.classList.remove('night')
-        })
-    } else {
-        themeChanger.checked = false
-        document.querySelectorAll("body").forEach(_element => {
-            _element.classList.add('night')
-            _element.classList.remove('day')
-        })
+        parser.render()
     }
 }
-
-if (localStorage && localStorage.content) {
-    input.value = localStorage.content
-}
-
-themeChanger.addEventListener('change', switchTheme, false)
-input.oninput = render
-
-let inputScrollSync = false
-let outputScrollSync = false
-
-input.onscroll = function () {
-    if (!inputScrollSync) {
-        outputScrollSync = true
-        output.scrollTop = this.scrollTop
-    }
-    inputScrollSync = false
-}
-
-output.onscroll = function () {
-    if (!outputScrollSync) {
-        inputScrollSync = true
-        input.scrollTop = this.scrollTop
-    }
-    outputScrollSync = false
-}
-
-render()
-fetchMembers()

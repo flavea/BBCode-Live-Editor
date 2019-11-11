@@ -7,6 +7,9 @@ var filesToCache = [
   '/css/style.less',
   '/scripts/less.min.js',
   '/scripts/parser.js',
+  '/scripts/editor.js',
+  '/scripts/modal.js',
+  '/scripts/theme.js',
   '/icons/icon-128x128.png',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
@@ -23,14 +26,20 @@ self.addEventListener('install', async event => {
   cache.addAll(filesToCache);
 });
 
+self.addEventListener('message', event => {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting()
+  }
+})
+
 self.addEventListener('fetch', event => {
   const req = event.request;
   const url = new URL(req.url);
 
   if (url.origin === location.url) {
-      event.respondWith(cacheFirst(req));
+    event.respondWith(cacheFirst(req));
   } else {
-      event.respondWith(networkFirst(req));
+    event.respondWith(networkFirst(req));
   }
 });
 
@@ -43,14 +52,14 @@ async function networkFirst(req) {
   const cache = await caches.open(cacheName + '-dynamic-cache');
 
   try {
-      const res = await fetch(req);
-      if(req.url.indexOf('http') !== 0) cache.put(req, res.clone());
-      return res;
+    const res = await fetch(req);
+    if (req.url.indexOf('http') !== 0) cache.put(req, res.clone());
+    return res;
   } catch (error) {
-      return await cache.match(req);
+    return await cache.match(req);
   }
 }
 
-self.addEventListener('activate',  event => {
+self.addEventListener('activate', event => {
   event.waitUntil(self.clients.claim());
 });
