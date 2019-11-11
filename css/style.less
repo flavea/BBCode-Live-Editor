@@ -99,6 +99,25 @@ code {
     align-items: center;
 }
 
+button {
+    background: var(--color-2);
+    color: var(--color-1);
+    padding: 10px;
+    font-weight: bold;
+    border: none;
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    cursor: pointer;
+}
+
+#reload {
+    width: 50%;
+    margin: 10px auto;
+    display: block;
+}
+
 #container {
     display: flex;
     flex-direction: column;
@@ -107,19 +126,9 @@ code {
 
     button {
         margin: 2px;
-        background: var(--color-2);
-        color: var(--color-1);
-        padding: 10px;
-        font-weight: bold;
-        border: none;
-        -webkit-font-smoothing: antialiased;
         display: inline-block;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
         line-height: 1;
         vertical-align: top;
-        cursor: pointer;
     }
 
     button:not(.fas) {
