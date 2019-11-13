@@ -294,8 +294,8 @@ const parser = {
         return result
     },
     render: function() {
-        const content = localStorage.content = parser.input.value = parser.input.value.trim().replace('--', '—').replace('...', '…')
-        const result = parser.parse(content)
+        const content = localStorage.content = parser.input.value = parser.input.value.replace('--', '—').replace('...', '…')
+        const result = parser.parse(content.trim())
         parser.output.innerHTML = ''
         parser.output.appendChild(result)
         const text = parser.output.innerText
