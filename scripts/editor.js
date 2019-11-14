@@ -118,7 +118,11 @@ const editor = {
             data.forEach(member => {
                 let name = member.Name.toLowerCase().split(' ')
                 for (var i = 0; i < name.length; i++) {
-                    name[i] = name[i][0].toUpperCase() + name[i].slice(1)
+                    if (name[i].length <= 2) {
+                        name[i] = name[i][0].toUpperCase() + name[i][1].toUpperCase() + name[i].slice(2)
+                    } else {
+                        name[i] = name[i][0].toUpperCase() + name[i].slice(1)
+                    }
                 }
                 name = name.join(' ')
                 members.innerHTML += `<option value="${name}">${name}</option>`
