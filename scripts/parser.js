@@ -121,7 +121,7 @@ const parser = {
     output: document.getElementById('output'),
     words: document.getElementById('words'),
     characters: document.getElementById('characters'),
-    parse: function(text) {
+    parse: function (text) {
         let oldp = 0
         let newp = 0
         let state = 0
@@ -293,16 +293,39 @@ const parser = {
 
         return result
     },
-    render: function() {
-        const content = localStorage.content = parser.input.value = parser.input.value.replace('--', '—').replace('...', '…')
+    smartSymbols: function () {
+        let str = parser.input.value.replace('--', '—').replace('...', '…')
+        str = str.replace(/(^')|((([\s{\[\(>]')|([\s>]"'))(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$))/gi,
+            function ($1$2) {
+                return $1$2.replace(/'/g, "\u2018");
+            }
+        )
+
+        str = str.replace(/'(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$)/gi, "\u2019")
+
+        str = str.replace(/(^")|((([\s{\[\(>]")|([\s>]'"))(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$))/gi,
+            function ($1$2) {
+                return $1$2.replace('"', "\u201c");
+            }
+        )
+
+        str = str.replace(/"(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$)/g, "\u201d");
+
+        return str
+    },
+    render: function () {
+        const selection = parser.input.selectionEnd
+        const initialInput = parser.input.value.length
+        const content = localStorage.content = parser.input.value = parser.smartSymbols()
         const result = parser.parse(content.trim())
+        parser.input.selectionEnd = selection + (parser.input.value.length - initialInput)
         parser.output.innerHTML = ''
         parser.output.appendChild(result)
         const text = parser.output.innerText
         parser.characters.innerText = text.length
         parser.words.innerText = parser.output.innerText.split(' ').length
     },
-    init: function() {
+    init: function () {
         if (localStorage && localStorage.content) {
             parser.input.value = localStorage.content
         }
