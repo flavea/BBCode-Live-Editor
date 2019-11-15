@@ -83,6 +83,7 @@
                 <button onclick="editor.spoiler('spoiler')" title="Spoiler">SPOILER</button>
                 <button onclick="editor.showMention()" title="Dice Roll">@MENTION</button>
                 <select name="font" onchange="editor.apply('font', this.options[this.selectedIndex].value)">
+                    <option value="0">Font Family</option>
                     <option value="Arial" style="font-family:Arial">Arial</option>
                     <option value="Times" style="font-family:Times">Times</option>
                     <option value="Calibri" style="font-family:Calibri">Calibri</option>
@@ -107,9 +108,17 @@
                     <option value="Source Code Pro" style="font-family: Source Code Pro">Source Code Pro</option>
                 </select>
                 <select name="size" onchange="editor.apply('size', this.options[this.selectedIndex].value)">
+                    <option value="0">Font Size</option>
                     <option value="1">Small</option>
                     <option value="7">Large</option>
                     <option value="14">Largest</option>
+                </select>
+                <select name="color" onchange="editor.apply('color', this.options[this.selectedIndex].value)">
+                    <option value="0">Font Color</option>
+                    <option value="gray">Gray</option>
+                    <option value="red">Red</option>
+                    <option value="green">Green</option>
+                    <option value="yellow">Yellow</option>
                 </select>
                 <div class="color-picker">
                     <div class="flex">Color: <input type="color" id="color" onchange="editor.apply('color')"
@@ -291,7 +300,7 @@
         document.getElementById('reload').addEventListener('click', () => {
             newWorker.postMessage({
                 action: 'skipWaiting'
-            });
+            })
         })
     </script>
 </body>

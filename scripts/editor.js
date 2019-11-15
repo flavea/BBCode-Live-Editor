@@ -60,7 +60,7 @@ const editor = {
                 after = '[/roll]'
                 break
             case 'color':
-                const color = document.getElementById('color').value
+                const color = type != null ? type : document.getElementById('color').value
                 before = `[color=${color}]`
                 after = '[/color]'
                 break
