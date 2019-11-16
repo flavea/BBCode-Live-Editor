@@ -321,6 +321,8 @@ const parser = {
         parser.input.selectionEnd = selection + (parser.input.value.length - initialInput)
         parser.output.innerHTML = ''
         parser.output.appendChild(result)
+        // hack for lists
+        parser.output.innerHTML = parser.output.innerHTML.replace(/<li><\/li>/g, '<li>');
         const text = parser.output.innerText
         parser.characters.innerText = text.length
         parser.words.innerText = parser.output.innerText.split(' ').length
