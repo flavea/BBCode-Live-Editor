@@ -189,7 +189,8 @@ const editor = {
             document.getElementById('right').style.display = 'block'
         }
     },
-    setDrafts: function () {
+    setDrafts: function (typing = false) {
+        if (typing) document.getElementById('drafts-list').innerHTML = ''
         const drafts = Object.keys(localStorage).filter(draft => draft.startsWith('draft-'))
         drafts.forEach((draft, i) => {
             const selector = document.getElementById('drafts-list')
