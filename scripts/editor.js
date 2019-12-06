@@ -155,7 +155,7 @@ const editor = {
         editor.open(id)
     },
     open: function (key) {
-        history.replaceState('', "BBCode Live Editor", "?id=" + key)
+        history.pushState('', "BBCode Live Editor", "?id=" + key)
         parser.render(true)
         modal.close()
     },
@@ -171,7 +171,7 @@ const editor = {
         else if (url.get('id') === key) {
             const temp = drafts.filter(d => d != key)[0]
             parser.input.value = localStorage.getItem(temp)
-            history.replaceState('', "BBCode Live Editor", "?id=" + temp)
+            history.pushState('', "BBCode Live Editor", "?id=" + temp)
         }
         parser.render({})
     },

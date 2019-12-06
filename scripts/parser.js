@@ -345,7 +345,7 @@ const parser = {
         parser.words.innerText = parser.output.innerText.split(' ').length
 
         localStorage.setItem(id, content)
-        history.replaceState('', "BBCode Live Editor", "?id=" + id)
+        history.pushState('', "BBCode Live Editor", "?id=" + id)
         if (typeof type === 'object') editor.setDrafts(true)
     },
     uuid: function () {
