@@ -313,10 +313,27 @@ const parser = {
 
         return str
     },
-    render: function () {
+    render: function (type) {
+        let id = 'draft-' + parser.uuid()
+        const url = new URLSearchParams(window.location.search)
+        const drafts = Object.keys(localStorage).filter(draft => draft.startsWith('draft-'))
+        if (url.has('id')) {
+            id = url.get('id')
+            if (typeof type === 'boolean') {
+                parser.input.value = localStorage.getItem(id)
+                parser.input.value = parser.smartSymbols()
+            }
+        }
+        else if (drafts.length > 0) {
+            id = drafts[0]
+            if (typeof type === 'boolean') {
+                parser.input.value = localStorage.getItem(id)
+                parser.input.value = parser.smartSymbols()
+            }
+        }
         const selection = parser.input.selectionEnd
         const initialInput = parser.input.value.length
-        const content = localStorage.content = parser.input.value = parser.smartSymbols()
+        const content = parser.input.value = parser.smartSymbols()
         const result = parser.parse(content.trim())
         parser.input.selectionEnd = selection + (parser.input.value.length - initialInput)
         parser.output.innerHTML = ''
@@ -326,11 +343,29 @@ const parser = {
         const text = parser.output.innerText
         parser.characters.innerText = text.length
         parser.words.innerText = parser.output.innerText.split(' ').length
+
+        localStorage.setItem(id, content)
+        history.replaceState('', "BBCode Live Editor", "?id=" + id)
+        if (typeof type === 'object') editor.setDrafts()
+    },
+    uuid: function () {
+        return (Object.keys(localStorage).filter(draft => draft.startsWith('draft-')).length + 1) + '-' + ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        )
     },
     init: function () {
-        if (localStorage && localStorage.content) {
+        const url = new URLSearchParams(window.location.search)
+        if (localStorage && localStorage.content && localStorage.content != '') {
+            const id = 'draft-' + parser.uuid()
             parser.input.value = localStorage.content
+            localStorage.setItem(id, parser.input.value)
+        } else if (url.has('id')) {
+            const id = url.get('id')
+            parser.input.value = localStorage.getItem(id)
+            history.replaceState('', "BBCode Live Editor", "?id=" + id)
         }
+        
+        localStorage.removeItem('content')
 
         parser.input.oninput = parser.render
 
@@ -353,6 +388,6 @@ const parser = {
             outputScrollSync = false
         }
 
-        parser.render()
+        parser.render(true)
     }
 }

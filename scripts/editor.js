@@ -81,6 +81,7 @@ const editor = {
                 after = ']'
                 break
         }
+        document.querySelectorAll('#buttons select').forEach(el => el.value = 0);
         if (document.selection) {
             parser.input.focus()
             document.selection.createRange().text = before + document.selection.createRange().text + after
@@ -148,8 +149,62 @@ const editor = {
             editor.apply('link')
         }
     },
+    new: function () {
+        let id = 'draft-' + parser.uuid()
+        parser.output.innerHTML = parser.input.value = ''
+        editor.open(id)
+    },
+    open: function (key) {
+        history.replaceState('', "BBCode Live Editor", "?id=" + key)
+        parser.render(true)
+        modal.close()
+    },
+    delete: function (key, i) {
+        const url = new URLSearchParams(window.location.search)
+        const drafts = Object.keys(localStorage).filter(draft => draft.startsWith('draft-'))
+
+        localStorage.removeItem(key)
+
+        if (drafts.length === 1) {
+            editor.new()
+        }
+        else if (url.get('id') === key) {
+            const temp = drafts.filter(d => d != key)[0]
+            parser.input.value = localStorage.getItem(temp)
+            history.replaceState('', "BBCode Live Editor", "?id=" + temp)
+        }
+        parser.render({})
+    },
+    openTab: function (which) {
+        document.querySelectorAll('#switch-mode button').forEach(el => {
+            if (el.id === which) el.classList.add('tabOpen')
+            else el.classList.remove('tabOpen')
+        });
+        if (which === 'editor-switch') {
+            document.getElementById('left').style.display = 'block'
+            document.getElementById('right').style.display = 'none'
+        }
+        if (which === 'preview-switch') {
+            document.getElementById('left').style.display = 'none'
+            document.getElementById('right').style.display = 'block'
+        }
+    },
+    setDrafts: function () {
+        const drafts = Object.keys(localStorage).filter(draft => draft.startsWith('draft-'))
+        drafts.forEach((draft, i) => {
+            const selector = document.getElementById('drafts-list')
+            const curr = selector.innerHTML
+            const data = {
+                key: draft,
+                content: localStorage.getItem(draft).split('.')[0]
+            }
+            const html = `<div class="draft"><div>${data.content}</div><button onclick="editor.open('${data.key}')">Open</button> <button onclick="editor.delete('${data.key}')">Delete</button></div>`
+            selector.innerHTML = curr + html
+        })
+    },
     init: function () {
         document.onkeyup = editor.shortcuts
         editor.fetchMembers()
+        editor.setDrafts()
     }
 }

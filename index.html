@@ -72,6 +72,7 @@
     <div id="container">
         <div id="buttons">
             <div>
+                <button class="new-draft"  onclick="modal.open('menu')" title="Bold"><i class="fas fa-file"></i> DRAFTS</button>
                 <button class="fas fa-bold" onclick="editor.apply('bold')" title="Bold"></button>
                 <button class="fas fa-italic" onclick="editor.apply('italic')" title="Italic"></button>
                 <button class="fas fa-strikethrough" onclick="editor.apply('strike')" title="Strikethrough"></button>
@@ -130,11 +131,6 @@
                     <option value="green">Green</option>
                     <option value="yellow">Yellow</option>
                 </select>
-                <div class="color-picker">
-                    <div class="flex">Color: <input type="color" id="color" onchange="editor.apply('color')"
-                            value="#7d7d7d">
-                    </div>
-                </div>
             </div>
         </div>
         <div id="mentions">
@@ -147,6 +143,10 @@
                 </select>
                 <button onclick="editor.apply('mention')">Mention</button>
             </div>
+        </div>
+        <div id="switch-mode">
+            <button id="editor-switch" class="tabOpen" onclick="editor.openTab('editor-switch')">Editor</button>
+            <button id="preview-switch"onclick="editor.openTab('preview-switch')">See Preview</button>
         </div>
         <div id="editor" class="flex">
             <div id="left">
@@ -171,7 +171,7 @@
                 <a class="s-button flex" onclick="modal.open('shortcuts')"><i class="fas fa-arrow-right"></i> shortcuts</a>
                 <a class="s-button flex" onclick="modal.open('info')"><i class="fas fa-info-circle"></i> info</a>
             </div>
-            <div style="text-align:right">
+            <div style="text-align:right; white-space: nowrap; padding: 0 10px;">
                 <span id="words">0</span> words // <span id="characters">0</span> characters
             </div>
         </div>
@@ -220,6 +220,13 @@
             </select>
             <label for="font-size">Font Size</label>
             <input type="number" id="font-size" value="16" onchange="theme.changeFont('size', this.value)">
+        </div>
+    </div>
+    <div id="menu" class="modal">
+        <div class="menu-content">
+            <div class="modal-close fas fa-times" onclick="modal.close()"></div>
+            <button class="new-draft-button" onclick="editor.new()">NEW DRAFT</button>
+            <div id="drafts-list"></div>
         </div>
     </div>
     <div id="info" class="modal flex">
