@@ -199,7 +199,7 @@ const editor = {
                 key: draft,
                 content: localStorage.getItem(draft).split('.')[0]
             }
-            const html = `<div class="draft"><div>${data.content}</div><button onclick="editor.open('${data.key}')">Open</button> <button onclick="editor.delete('${data.key}')">Delete</button></div>`
+            const html = `<div class="draft"><div>${data.content}</div><button onclick="editor.open('${data.key}')">Open</button> <button class="delete" onclick="editor.delete('${data.key}')"><i class="fas fa-trash"></i> Delete</button></div>`
             selector.innerHTML = curr + html
         })
     },
