@@ -1,6 +1,6 @@
 @color1: #fde5cd;
 @color2: #ee5134;
-@color3: #63e4e2;
+@color3: #368ee0;
 @color4: #222;
 @color5: #fff;
 
@@ -10,7 +10,17 @@
     border: 0;
 }
 
-.day {
+.light {
+    --color-1: @color5;
+    --color-2: @color3;
+    --color-3: @color2;
+    --text: @color4;
+    --draft-bg: @color4;
+    --draft-text: @color5;
+    --draft-link: @color3;
+}
+
+.sunset {
     --color-1: @color1;
     --color-2: @color2;
     --color-3: @color3;
@@ -20,7 +30,7 @@
     --draft-link: @color3;
 }
 
-.night {
+.dawn {
     --color-1: @color4;
     --color-2: @color1;
     --color-3: @color2;
@@ -116,6 +126,7 @@ button {
     font-variant: normal;
     text-rendering: auto;
     cursor: pointer;
+    border-radius: 4px;
 
     &.new-draft {
         background: var(--text);
@@ -162,16 +173,17 @@ button {
         text-rendering: auto;
         line-height: 1;
         min-width: 150px;
+        border-radius: 4px;
     }
 
     #mentions {
         padding: 0px 20px 20px 20px;
-        border-bottom: 2px dashed var(--color-2);
+        border-bottom: 2px solid var(--color-2);
         display: none;
     }
 
     #buttons {
-        border-bottom: 2px dashed var(--color-2);
+        border-bottom: 2px solid var(--color-2);
         font-family: 'Source Code Pro', 'Consolas', monospace;
 
         &>div {
@@ -191,7 +203,7 @@ button {
     #stats {
         background: var(--color-1);
         padding: 10px 20px;
-        border-top: 2px dashed var(--color-2);
+        border-top: 2px solid var(--color-2);
         color: var(--color-2);
         font-weight: bold;
         display: flex;
@@ -203,6 +215,7 @@ button {
         width: 100%;
         overflow-x: auto;
         overflow-y: hidden;
+        height: 55px;
 
         .s-button {
             color: var(--color-2);
@@ -258,7 +271,7 @@ button {
         }
 
         #right {
-            border-left: 2px dashed var(--color-2);
+            border-left: 2px solid var(--color-2);
             height: 100%;
             overflow: auto;
         }
@@ -333,6 +346,29 @@ button {
             font-family: 'Noto Sans', sans-serif;
             color: var(--color-2)
         }
+
+        .theme-choice {
+            display: block;
+            text-align: center;
+            margin: .5rem;
+            padding: .5rem;
+            cursor: pointer;
+            border-radius: 4px;
+
+            img {
+                max-width: 200px;
+                display: block;
+                margin: auto
+            }
+
+            &:hover {
+                background: rgba(0, 0, 0, .2)
+            }
+
+            &.active {
+                background: rgba(0, 0, 0, .2)
+            }
+        }
     }
 
 
@@ -362,6 +398,7 @@ button {
             display: block;
             padding: 1em;
             margin: 5px 0;
+            border-radius: 4px;
 
             button {
                 background: var(--color-1);
@@ -386,87 +423,6 @@ button {
     }
 }
 
-.switcher {
-    width: 100px;
-    position: relative;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-
-    .switcher-checkbox {
-        display: none;
-    }
-
-    .switcher-label {
-        display: block;
-        overflow: hidden;
-        cursor: pointer;
-        border: 2px solid @color2;
-        border-radius: 30px;
-    }
-
-    .switcher-inner {
-        display: block;
-        width: 200%;
-        margin-left: -100%;
-        transition: margin 0.3s ease-in 0s;
-
-        &:before,
-        &:after {
-            display: block;
-            float: left;
-            width: 50%;
-            height: 30px;
-            padding: 0;
-            line-height: 30px;
-            font-size: 12px;
-            color: white;
-            font-weight: bold;
-            box-sizing: border-box;
-        }
-
-        &:before {
-            content: "day";
-            padding-left: 9px;
-            background-color: @color1;
-            color: @color2;
-        }
-
-        &:after {
-            content: "night";
-            padding-right: 9px;
-            background-color: @color4;
-            color: @color1;
-            text-align: right;
-        }
-    }
-
-    .switcher-switch {
-        display: block;
-        width: 12px;
-        margin: 11px;
-        background: @color3;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 56px;
-        border: 2px solid @color2;
-        border-radius: 30px;
-        transition: all 0.3s ease-in 0s;
-    }
-
-    .switcher-checkbox {
-        &:checked+.switcher-label {
-            .switcher-inner {
-                margin-left: 0;
-            }
-            .switcher-switch {
-                right: 0px;
-            }
-        }
-    }    
-}
-
 #switch-mode {
     display: none;
     background: var(--color-2);
@@ -476,10 +432,20 @@ button {
         background: var(--text);
         color: var(--color-1);
         margin-right: -5px;
+        border-radius: none;
 
         &.tabOpen {
             background: var(--color-1);
             color: var(--color-2);
+        }
+    }
+}
+
+
+@media screen and (max-width: 1360px) {
+    #theme {
+        .flex {
+            display: block;
         }
     }
 }
@@ -515,10 +481,13 @@ button {
         }
 
         #stats {
-            border-top: none;
             flex-direction: row-reverse;
             align-content: center;
             align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+
 
             div {
                 text-align: left;
