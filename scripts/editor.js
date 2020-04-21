@@ -1,4 +1,5 @@
 const editor = {
+    file: document.getElementById('file'),
     apply: function (code, type = null) {
         let before
         let after
@@ -159,6 +160,20 @@ const editor = {
         parser.render(true)
         modal.close()
     },
+    saveFile: function () {
+        const type = "text/plain;charset=utf-8"
+        const url = new URLSearchParams(window.location.search)
+        const id = url.get('id') + '.txt'
+        const t = parser.input.value
+        try {
+            var b = new Blob([t], {
+                type: type
+            });
+            saveAs(b, id);
+        } catch (e) {
+            window.open("data:" + id + "," + encodeURIComponent(t), '_blank', '');
+        }
+    },
     delete: function (key, i) {
         const url = new URLSearchParams(window.location.search)
         const drafts = Object.keys(localStorage).filter(draft => draft.startsWith('draft-'))
@@ -167,8 +182,7 @@ const editor = {
 
         if (drafts.length === 1) {
             editor.new()
-        }
-        else if (url.get('id') === key) {
+        } else if (url.get('id') === key) {
             const temp = drafts.filter(d => d != key)[0]
             parser.input.value = localStorage.getItem(temp)
             history.pushState('', "BBCode Live Editor", "?id=" + temp)
@@ -199,7 +213,7 @@ const editor = {
                 key: draft,
                 content: localStorage.getItem(draft).split('.')[0]
             }
-            const html = `<div class="draft"><div>${data.content}</div><button onclick="editor.open('${data.key}')">Open</button> <button class="delete" onclick="editor.delete('${data.key}')"><i class="fas fa-trash"></i> Delete</button></div>`
+            const html = `<div class="draft"><div>${data.key} - ${data.content}</div><button onclick="editor.open('${data.key}')">Open</button> <button class="delete" onclick="editor.delete('${data.key}')"><i class="fas fa-trash"></i> Delete</button></div>`
             selector.innerHTML = curr + html
         })
     },
@@ -207,5 +221,61 @@ const editor = {
         document.onkeyup = editor.shortcuts
         editor.fetchMembers()
         editor.setDrafts()
+        editor.file.addEventListener("change", function () {
+            if (this.files && this.files[0]) {
+                var myFile = this.files[0];
+                if (myFile.size < 100000) {
+
+                    const filename = myFile.name.split('.')
+                    var reader = new FileReader();
+                    let fname = filename[0]
+                    if (!fname.startsWith('draft')) {
+                        fname = 'draft-' + fname
+                    }
+                    if (filename[filename.length - 1].includes('doc')) {
+                        reader.addEventListener('load', function (e) {
+                            mammoth.convertToHtml({
+                                arrayBuffer: e.target.result
+                            }).then(function (resultObject) {
+                                let html = resultObject.value
+                                html = html.replace(/<b>/ig, '[b]');
+                                html = html.replace(/<strong>/ig, '[b]');
+                                html = html.replace(/<\/b>/ig, '[/b]');
+                                html = html.replace(/<\/strong>/ig, '[/b]');
+                                html = html.replace(/<em>/ig, '[i]');
+                                html = html.replace(/<ul>/ig, '[list]');
+                                html = html.replace(/<\/ul>/ig, '[/list]');
+                                html = html.replace(/<ol>/ig, '[list=1]');
+                                html = html.replace(/<\/ol>/ig, '[/list]');
+                                html = html.replace(/<\/em>/ig, '[/i]');
+                                html = html.replace(/<\/div>/ig, '\n');
+                                html = html.replace(/<\/li>/ig, '');
+                                html = html.replace(/<li>/ig, '[*]');
+                                html = html.replace(/<\/ul>/ig, '\n');
+                                html = html.replace(/<\/p>/ig, '\n');
+                                html = html.replace(/<br\s*[\/]?>/gi, "\n");
+                                html = html.replace(/<\/p>/ig, '\n');
+                                html = html.replace(/<p\s*[\/]?>/gi, "\n");
+                                parser.input.value = html
+                                history.pushState('', "BBCode Live Editor", "?id=" + fname)
+                                parser.render()
+                                modal.close()
+                            })
+                        });
+                        reader.readAsArrayBuffer(myFile);
+                    } else if (filename[filename.length - 1].includes('txt')) {
+                        reader.addEventListener('load', function (e) {
+                            parser.input.value = e.target.result
+                            history.pushState('', "BBCode Live Editor", "?id=" + fname)
+                            parser.render()
+                            modal.close()
+                        });
+                        reader.readAsBinaryString(myFile)
+                    }
+                } else {
+                    alert("File is too big :(")
+                }
+            }
+        });
     }
 }
