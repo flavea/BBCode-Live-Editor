@@ -3,7 +3,7 @@ const states = [
     /[=[\]]/,
     /\]/
 ]
-const tagList = ['*', 'img', 'url', 'color', 'size', 'font', 'align', 'quote', 'spoiler', 'roll', 'dohtml', 'list', 'hr', 'b', 'i', 'u', 's', 'table', 'tr', 'td', 'code']
+const tagList = ['*', 'img', 'url', 'color', 'size', 'font', 'align', 'quote', 'spoiler', 'roll', 'dohtml', 'list', 'hr', 'b', 'i', 'u', 's', 'table', 'tr', 'td', 'code', 'center', 'right']
 const whitelist = {
     'img': /^https?:\/\//,
     'url': /^(https?|ftps?|ircs?):\/\//,
@@ -342,7 +342,7 @@ const parser = {
         parser.output.innerHTML = parser.output.innerHTML.replace(/<li><\/li>/g, '<li>');
         const text = parser.output.innerText
         parser.characters.innerText = text.length
-        parser.words.innerText = parser.output.innerText.split(' ').length
+        parser.count()
 
         localStorage.setItem(id, content)
         history.pushState('', "BBCode Live Editor", "?id=" + id)
@@ -352,6 +352,14 @@ const parser = {
         return (Object.keys(localStorage).filter(draft => draft.startsWith('draft-')).length + 1) + '-' + ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
             (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         )
+    },
+    count: function () {
+        var _z = 0,
+        _words = parser.output.innerText.split(/\s/g);
+        for (var i = 0; i < _words.length; i++) {
+            if (_words[i].length >= 1) _z++;
+        }
+        parser.words.innerText = _z + " word" + (_z == 1 ? "" : "s");
     },
     init: function () {
         const url = new URLSearchParams(window.location.search)
