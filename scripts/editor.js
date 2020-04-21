@@ -225,52 +225,55 @@ const editor = {
             if (this.files && this.files[0]) {
                 var myFile = this.files[0];
                 if (myFile.size < 100000) {
-
                     const filename = myFile.name.split('.')
-                    var reader = new FileReader();
-                    let fname = filename[0]
-                    if (!fname.startsWith('draft')) {
-                        fname = 'draft-' + fname
-                    }
-                    if (filename[filename.length - 1].includes('doc')) {
-                        reader.addEventListener('load', function (e) {
-                            mammoth.convertToHtml({
-                                arrayBuffer: e.target.result
-                            }).then(function (resultObject) {
-                                let html = resultObject.value
-                                html = html.replace(/<b>/ig, '[b]');
-                                html = html.replace(/<strong>/ig, '[b]');
-                                html = html.replace(/<\/b>/ig, '[/b]');
-                                html = html.replace(/<\/strong>/ig, '[/b]');
-                                html = html.replace(/<em>/ig, '[i]');
-                                html = html.replace(/<ul>/ig, '[list]');
-                                html = html.replace(/<\/ul>/ig, '[/list]');
-                                html = html.replace(/<ol>/ig, '[list=1]');
-                                html = html.replace(/<\/ol>/ig, '[/list]');
-                                html = html.replace(/<\/em>/ig, '[/i]');
-                                html = html.replace(/<\/div>/ig, '\n');
-                                html = html.replace(/<\/li>/ig, '');
-                                html = html.replace(/<li>/ig, '[*]');
-                                html = html.replace(/<\/ul>/ig, '\n');
-                                html = html.replace(/<\/p>/ig, '\n');
-                                html = html.replace(/<br\s*[\/]?>/gi, "\n");
-                                html = html.replace(/<\/p>/ig, '\n');
-                                html = html.replace(/<p\s*[\/]?>/gi, "\n");
-                                parser.input.value = html
+                    if (['docx', 'txt'].includes(filename[filename.length - 1])) {
+                        var reader = new FileReader();
+                        let fname = filename[0]
+                        if (!fname.startsWith('draft')) {
+                            fname = 'draft-' + fname
+                        }
+                        if (filename[filename.length - 1].includes('doc')) {
+                            reader.addEventListener('load', function (e) {
+                                mammoth.convertToHtml({
+                                    arrayBuffer: e.target.result
+                                }).then(function (resultObject) {
+                                    let html = resultObject.value
+                                    html = html.replace(/<b>/ig, '[b]');
+                                    html = html.replace(/<strong>/ig, '[b]');
+                                    html = html.replace(/<\/b>/ig, '[/b]');
+                                    html = html.replace(/<\/strong>/ig, '[/b]');
+                                    html = html.replace(/<em>/ig, '[i]');
+                                    html = html.replace(/<ul>/ig, '[list]');
+                                    html = html.replace(/<\/ul>/ig, '[/list]');
+                                    html = html.replace(/<ol>/ig, '[list=1]');
+                                    html = html.replace(/<\/ol>/ig, '[/list]');
+                                    html = html.replace(/<\/em>/ig, '[/i]');
+                                    html = html.replace(/<\/div>/ig, '\n');
+                                    html = html.replace(/<\/li>/ig, '');
+                                    html = html.replace(/<li>/ig, '[*]');
+                                    html = html.replace(/<\/ul>/ig, '\n');
+                                    html = html.replace(/<\/p>/ig, '\n');
+                                    html = html.replace(/<br\s*[\/]?>/gi, "\n");
+                                    html = html.replace(/<\/p>/ig, '\n');
+                                    html = html.replace(/<p\s*[\/]?>/gi, "\n");
+                                    parser.input.value = html
+                                    history.pushState('', "BBCode Live Editor", "?id=" + fname)
+                                    parser.render()
+                                    modal.close()
+                                })
+                            });
+                            reader.readAsArrayBuffer(myFile);
+                        } else if (filename[filename.length - 1].includes('txt')) {
+                            reader.addEventListener('load', function (e) {
+                                parser.input.value = e.target.result
                                 history.pushState('', "BBCode Live Editor", "?id=" + fname)
                                 parser.render()
                                 modal.close()
-                            })
-                        });
-                        reader.readAsArrayBuffer(myFile);
-                    } else if (filename[filename.length - 1].includes('txt')) {
-                        reader.addEventListener('load', function (e) {
-                            parser.input.value = e.target.result
-                            history.pushState('', "BBCode Live Editor", "?id=" + fname)
-                            parser.render()
-                            modal.close()
-                        });
-                        reader.readAsBinaryString(myFile)
+                            });
+                            reader.readAsBinaryString(myFile)
+                        }
+                    } else {
+                        alert("File must be docx or txt")
                     }
                 } else {
                     alert("File is too big :(")

@@ -185,6 +185,7 @@ button {
     #buttons {
         border-bottom: 2px solid var(--color-2);
         font-family: 'Source Code Pro', 'Consolas', monospace;
+        position: relative;
 
         &>div {
             padding: 10px;
@@ -196,6 +197,17 @@ button {
             justify-content: flex-start;
             align-content: center;
             align-items: center;
+        }
+
+        &:after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 60px;
+            width: 25px;
+            background: transparent;
+            background: linear-gradient(90deg, transparent 0%, var(--color-1) 50%);
+            content: "";
         }
     }
 
@@ -390,6 +402,7 @@ button {
 
         .new-draft-button {
             font-size: 16px;
+            margin: 5px;
         }
 
         .draft {
@@ -432,7 +445,7 @@ button {
         background: var(--text);
         color: var(--color-1);
         margin-right: -5px;
-        border-radius: none;
+        border-radius: 0;
 
         &.tabOpen {
             background: var(--color-1);
@@ -454,6 +467,7 @@ button {
 
     #container {
         #buttons {
+            border-bottom: 0;
             &>div {
                 width: calc(100% - 10px);
             }
@@ -481,8 +495,9 @@ button {
         }
 
         #stats {
+            flex: 1;
             flex-direction: row-reverse;
-            align-content: center;
+            align-content: flex-start;
             align-items: center;
             position: fixed;
             bottom: 0;
@@ -505,5 +520,17 @@ button {
         .menu-content {
             width: 100%;
         }
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+    #stats {
+        div {
+            font-size: .7rem;
+        }
+    }
+    .s-button:last-child, .s-button:nth-child(3) {
+        display: none;
     }
 }
