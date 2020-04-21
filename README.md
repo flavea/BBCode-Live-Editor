@@ -4,10 +4,12 @@
 **Current Features**
 * Live preview
 * Sync Scrolling
-* Light/Dark Theme
+* Several Themes: Clear Sky, Sunset, Dawn
 * Changing editor and preview font and font size
 * Shortcuts
 * Can be installed as a PWA
+* Save as text file
+* Open txt and docx file
 
 **Credits**
 *   Inspired by [Marcdown](https://github.com/liyasthomas/marcdown).
