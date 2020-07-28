@@ -178,16 +178,18 @@ const editor = {
         const url = new URLSearchParams(window.location.search)
         const drafts = Object.keys(localStorage).filter(draft => draft.startsWith('draft-'))
 
-        localStorage.removeItem(key)
+        if(confirm('Are you sure you want to delete this draft?')) {
+            localStorage.removeItem(key)
 
-        if (drafts.length === 1) {
-            editor.new()
-        } else if (url.get('id') === key) {
-            const temp = drafts.filter(d => d != key)[0]
-            parser.input.value = localStorage.getItem(temp)
-            history.pushState('', "BBCode Live Editor", "?id=" + temp)
+            if (drafts.length === 1) {
+                editor.new()
+            } else if (url.get('id') === key) {
+                const temp = drafts.filter(d => d != key)[0]
+                parser.input.value = localStorage.getItem(temp)
+                history.pushState('', "BBCode Live Editor", "?id=" + temp)
+            }
+            parser.render({})
         }
-        parser.render({})
     },
     openTab: function (which) {
         document.querySelectorAll('#switch-mode button').forEach(el => {
