@@ -213,9 +213,9 @@ const editor = {
             const curr = selector.innerHTML
             const data = {
                 key: draft,
-                content: localStorage.getItem(draft).split('.')[0]
+                content: localStorage.getItem(draft).substring(0, 100)+'...'
             }
-            const html = `<div class="draft"><div>${data.key} - ${data.content}</div><button onclick="editor.open('${data.key}')">Open</button> <button class="delete" onclick="editor.delete('${data.key}')"><i class="fas fa-trash"></i> Delete</button></div>`
+            const html = `<div class="draft"><div>${data.content}</div><button onclick="editor.open('${data.key}')">Open</button> <button class="delete" onclick="editor.delete('${data.key}')"><i class="fas fa-trash"></i> Delete</button></div>`
             selector.innerHTML = curr + html
         })
     },
