@@ -37,7 +37,8 @@ const editor = {
                 after = '[/code]'
                 break
             case 'link':
-                before = '[url=URL]'
+                const link = prompt('Insert your link')
+                before = `[url=${link}]`
                 after = '[/url]'
                 break
             case 'image':
@@ -89,7 +90,17 @@ const editor = {
         } else if (parser.input.selectionStart || parser.input.selectionStart == '0') {
             let startPos = parser.input.selectionStart
             let endPos = parser.input.selectionEnd
-            parser.input.value = parser.input.value.substring(0, startPos) + before + parser.input.value.substring(startPos, endPos) + after + parser.input.value.substring(endPos, parser.input.value.length)
+            let inBetween = parser.input.value.substring(startPos, endPos)
+            if (!inBetween) {
+                if (code == 'image') {
+                    inBetween = prompt('Insert your image link')
+                } else if (code == 'link') {
+                    inBetween = prompt('Insert your link name/text')
+                } else if (code == roll) {
+                    inBetween = prompt('Insert your dice roll code (ex: 1d6, 1d3+2)')
+                }
+            }
+            parser.input.value = parser.input.value.substring(0, startPos) + before + inBetween + after + parser.input.value.substring(endPos, parser.input.value.length)
             parser.input.selectionStart = startPos + before.length
             parser.input.selectionEnd = endPos + before.length
             parser.input.focus()
