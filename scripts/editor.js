@@ -96,7 +96,7 @@ const editor = {
                     inBetween = prompt('Insert your image link')
                 } else if (code == 'link') {
                     inBetween = prompt('Insert your link name/text')
-                } else if (code == roll) {
+                } else if (code == 'roll') {
                     inBetween = prompt('Insert your dice roll code (ex: 1d6, 1d3+2)')
                 }
             }
