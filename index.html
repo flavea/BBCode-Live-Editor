@@ -323,34 +323,11 @@
                 navigator.serviceWorker.register('sw.js').then((registration) => {
                     console.log('ServiceWorker registration successful with scope: ', registration
                         .scope)
-                    registration.addEventListener('updatefound', () => {
-                        newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            switch (newWorker.state) {
-                                case 'installed':
-                                    if (navigator.serviceWorker.controller) {
-                                        modal.open('update')
-                                    }
-                                    break
-                            }
-                        })
-                    })
+                    
                 }).catch((err) => console.log('ServiceWorker registration failed: ', err))
             })
         }
 
-        let refreshing;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (refreshing) return
-            window.location.reload()
-            refreshing = true
-        })
-
-        document.getElementById('reload').addEventListener('click', () => {
-            newWorker.postMessage({
-                action: 'skipWaiting'
-            })
-        })
     </script>
 </body>
 
