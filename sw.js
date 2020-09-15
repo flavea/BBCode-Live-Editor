@@ -13,14 +13,12 @@ var filesToCache = [
   '/icons/icon-128x128.png',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
+  '/icons/icon-512x512.png',
   '/webfonts/fa-solid-900.eot',
   '/webfonts/fa-solid-900.svg',
   '/webfonts/fa-solid-900.ttf',
   '/webfonts/fa-solid-900.woff',
-  '/webfonts/fa-solid-900.woff2',
-  self.location.href,
-  'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.9/mammoth.browser.min.js',
-  'https://cdn.jsdelivr.net/g/filesaver.js'
+  '/webfonts/fa-solid-900.woff2'
 ];
 
 self.addEventListener('install', async event => {
@@ -35,12 +33,10 @@ self.addEventListener('message', event => {
 })
 
 self.addEventListener('fetch', event => {
-  console.log(caches)
   const req = event.request;
   const url = new URL(req.url);
-  const whitelisted = ['https://bbcode.ilma.dev', 'http://bbcode.ilma.dev', 'http://127.0.0.1:5500', 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net']
 
-  if (whitelisted.includes(url.origin)) {
+  if (url.origin === location.url) {
     event.respondWith(cacheFirst(req));
   } else {
     event.respondWith(networkFirst(req));
