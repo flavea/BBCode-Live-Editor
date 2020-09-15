@@ -313,6 +313,9 @@
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.9/mammoth.browser.min.js"></script>
     <script>
+        if (Storage == void 0) {
+            alert('Your browser does not support saving feature. You still can use the app without the feature.')
+        }
         parser.init()
         editor.init()
         theme.init()
@@ -323,11 +326,10 @@
                 navigator.serviceWorker.register('sw.js').then((registration) => {
                     console.log('ServiceWorker registration successful with scope: ', registration
                         .scope)
-                    
+
                 }).catch((err) => console.log('ServiceWorker registration failed: ', err))
             })
         }
-
     </script>
 </body>
 
