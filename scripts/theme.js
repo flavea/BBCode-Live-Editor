@@ -37,6 +37,8 @@ const theme = {
             theme.switchTheme(currentTheme)
             parser.input.style.fontFamily = theme.themeSetting.editorFont
             parser.output.style.fontFamily = theme.themeSetting.previewFont
+            parser.input.style.fontSize = theme.themeSetting.fontSize
+            parser.output.style.fontSize = theme.themeSetting.fontSize
         } else {
             theme.switchTheme("light")
         }

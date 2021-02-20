@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -58,7 +59,7 @@
     <script src="scripts/less.min.js"></script>
 </head>
 
-<body class="pink">
+<body class="light">
     <div id="container">
         <div id="buttons">
             <div>
@@ -169,44 +170,48 @@
             <div class="modal-title">
                 Setting
             </div>
-            <label for="editor-font">Editor Font</label>
-            <select name="editor-font" onchange="theme.changeFont('editor', this.options[this.selectedIndex].value)">
-                <option value="Arial" style="font-family:Arial">Arial</option>
-                <option value="Times" style="font-family:Times">Times</option>
-                <option value="Calibri" style="font-family:Calibri">Calibri</option>
-                <option value="Cambria" style="font-family:Cambria">Cambria</option>
-                <option value="Comic Sans MS" style="font-family:Comic Sans MS">Comic Sans MS</option>
-                <option value="Courier" style="font-family:Courier">Courier</option>
-                <option value="Geneva" style="font-family:Geneva">Geneva</option>
-                <option value="Optima" style="font-family:Optima">Optima</option>
-                <option value="Special Elite" style="font-family: Special Elite">Special Elite</option>
-                <option value="Georgia" style="font-family: Georgia;">Georgia</option>
-                <option value="Lato" style="font-family: Lato;">Lato</option>
-                <option value="Noto Sans" style="font-family: Noto Sans">Noto Sans</option>
-                <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
-                <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
-                <option value="Source Code Pro" style="font-family: Source Code Pro" selected>Source Code Pro</option>
-            </select>
-            <label for="preview-font">Preview Font</label>
-            <select name="preview-font" onchange="theme.changeFont('preview', this.options[this.selectedIndex].value)">
-                <option value="Arial" style="font-family:Arial">Arial</option>
-                <option value="Times" style="font-family:Times">Times</option>
-                <option value="Calibri" style="font-family:Calibri">Calibri</option>
-                <option value="Cambria" style="font-family:Cambria">Cambria</option>
-                <option value="Comic Sans MS" style="font-family:Comic Sans MS">Comic Sans MS</option>
-                <option value="Courier" style="font-family:Courier">Courier</option>
-                <option value="Geneva" style="font-family:Geneva">Geneva</option>
-                <option value="Optima" style="font-family:Optima">Optima</option>
-                <option value="Special Elite" style="font-family: Special Elite">Special Elite</option>
-                <option value=" Georgia" style="font-family: Georgia;">Georgia</option>
-                <option value="Lato" style="font-family: Lato;">Lato</option>
-                <option value="Noto Sans" style="font-family: Noto Sans" selected>Noto Sans</option>
-                <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
-                <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
-                <option value="Source Code Pro" style="font-family: Source Code Pro">Source Code Pro</option>
-            </select>
-            <label for="font-size">Font Size</label>
-            <input type="number" id="font-size" value="16" onchange="theme.changeFont('size', this.value)">
+            <div class="modal-body">
+                <label for="editor-font">Editor Font</label>
+                <select name="editor-font"
+                    onchange="theme.changeFont('editor', this.options[this.selectedIndex].value)">
+                    <option value="Arial" style="font-family:Arial">Arial</option>
+                    <option value="Times" style="font-family:Times">Times</option>
+                    <option value="Calibri" style="font-family:Calibri">Calibri</option>
+                    <option value="Cambria" style="font-family:Cambria">Cambria</option>
+                    <option value="Comic Sans MS" style="font-family:Comic Sans MS">Comic Sans MS</option>
+                    <option value="Courier" style="font-family:Courier">Courier</option>
+                    <option value="Geneva" style="font-family:Geneva">Geneva</option>
+                    <option value="Optima" style="font-family:Optima">Optima</option>
+                    <option value="Special Elite" style="font-family: Special Elite">Special Elite</option>
+                    <option value="Georgia" style="font-family: Georgia;">Georgia</option>
+                    <option value="Lato" style="font-family: Lato;">Lato</option>
+                    <option value="Noto Sans" style="font-family: Noto Sans">Noto Sans</option>
+                    <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
+                    <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
+                    <option value="Source Code Pro" style="font-family: Source Code Pro" selected>Source Code Pro
+                    </option>
+                </select>
+                <label for="preview-font">Preview Font</label>
+                <select name="preview-font"
+                    onchange="theme.changeFont('preview', this.options[this.selectedIndex].value)">
+                    <option value="Arial" style="font-family:Arial">Arial</option>
+                    <option value="Times" style="font-family:Times">Times</option>
+                    <option value="Calibri" style="font-family:Calibri">Calibri</option>
+                    <option value="Cambria" style="font-family:Cambria">Cambria</option>
+                    <option value="Comic Sans MS" style="font-family:Comic Sans MS">Comic Sans MS</option>
+                    <option value="Courier" style="font-family:Courier">Courier</option>
+                    <option value="Geneva" style="font-family:Geneva">Geneva</option>
+                    <option value="Optima" style="font-family:Optima">Optima</option>
+                    <option value="Special Elite" style="font-family: Special Elite">Special Elite</option>
+                    <option value=" Georgia" style="font-family: Georgia;">Georgia</option>
+                    <option value="Lato" style="font-family: Lato;">Lato</option>
+                    <option value="Noto Sans" style="font-family: Noto Sans" selected>Noto Sans</option>
+                    <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
+                    <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
+                    <option value="Source Code Pro" style="font-family: Source Code Pro">Source Code Pro</option>
+                </select>
+                <label for="font-size">Font Size</label>
+                <input type="number" id="font-size" value="16" onchange="theme.changeFont('size', this.value)"></div>
         </div>
     </div>
     <div id="menu" class="modal">

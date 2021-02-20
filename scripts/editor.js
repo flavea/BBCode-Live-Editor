@@ -289,7 +289,7 @@ const editor = {
         editor.setDrafts()
         setInterval(() => {
             editor.save()
-        }, 20000);
+        }, 30000);
 
         document.onkeyup = editor.shortcuts
         editor.file.addEventListener("change", function () {
