@@ -1,3 +1,5 @@
+ const defaultContent = 'Look, [b]there[/b] are [i]words[/i]!'
+
 const modal = {
     modals: document.querySelectorAll('.modal'),
     open: function(id) {

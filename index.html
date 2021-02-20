@@ -67,6 +67,8 @@
 
     <link href="css/fonts.css" rel="stylesheet">
     <link rel="stylesheet" href="css/fa.css">
+    <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
     <link rel="stylesheet/less" type="text/css" href="css/style.less" />
     <script src="scripts/less.min.js"></script>
 </head>
@@ -75,8 +77,9 @@
     <div id="container">
         <div id="buttons">
             <div>
-                <button class="new-draft" onclick="modal.open('menu')" title="Bold"><i class="fas fa-bars"></i>
+                <button class="menu-trigger" onclick="editor.openMenu()" title="Bold"><i class="fas fa-bars"></i>
                     MENU</button>
+                <button id="save" style="display: none" class="menu-trigger" onclick="editor.save()" title="Bold">Save</button>
                 <button class="fas fa-bold" onclick="editor.apply('bold')" title="Bold"></button>
                 <button class="fas fa-italic" onclick="editor.apply('italic')" title="Italic"></button>
                 <button class="fas fa-strikethrough" onclick="editor.apply('strike')" title="Strikethrough"></button>
@@ -96,7 +99,6 @@
                 <button onclick="editor.apply('html')" title="HTML">DOHTML</button>
                 <button onclick="editor.apply('roll')" title="Dice Roll">ROLL</button>
                 <button onclick="editor.spoiler('spoiler')" title="Spoiler">SPOILER</button>
-                <button onclick="editor.showMention()" title="Dice Roll">@MENTION</button>
                 <select name="font" onchange="editor.apply('font', this.options[this.selectedIndex].value)">
                     <option value="0">Font Family</option>
                     <option value="Arial" style="font-family:Arial">Arial</option>
@@ -224,12 +226,14 @@
     <div id="menu" class="modal">
         <div class="menu-content">
             <div class="modal-close fas fa-times" onclick="modal.close()"></div>
-            <button class="new-draft-button" onclick="editor.new()"><i class="fas fa-file"></i> NEW DRAFT</button>
-            <button class="new-draft-button" onclick="editor.saveFile()"><i class="fas fa-file-export"></i> SAVE AS
-                FILE</button>
-            <button class="new-draft-button" onclick="editor.file.click()"><i class="fas fa-file-import"></i> OPEN
-                FILE</button>
-            <div style="display:none"><input type="file" id="file" accept=".docx,.txt"></div>
+            <div id="menu-sidebar">
+                <div id="firebaseui-auth-container"></div>
+                <button class="menu-button" onclick="editor.new()"><i class="fas fa-file"></i> <span>New Draft</span></button>
+                <button class="menu-button" onclick="editor.saveFile()"><i class="fas fa-file-export"></i> <span>Save as File</span></button>
+                <button class="menu-button" onclick="editor.file.click()"><i class="fas fa-file-import"></i><span>Open File</span></button>
+                <button id="logout" style="display: none" class="menu-button" onclick="editor.logout()"><i class="fas fa-file-import"></i><span>Sign Out</span></button>
+                <div style="display:none"><input type="file" id="file" accept=".docx,.txt"></div>
+            </div>
             <div id="drafts-list"></div>
         </div>
     </div>
@@ -306,19 +310,20 @@
             </ul>
         </div>
     </div>
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-firestore.js"></script>
+    <script src="scripts/modal.js"></script>
     <script src="scripts/parser.js"></script>
     <script src="scripts/editor.js"></script>
     <script src="scripts/theme.js"></script>
-    <script src="scripts/modal.js"></script>
+    <script src="scripts/firebase.js"></script>
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.9/mammoth.browser.min.js"></script>
     <script>
         if (Storage == void 0) {
             alert('Your browser does not support saving feature. You still can use the app without the feature.')
         }
-        parser.init()
-        editor.init()
-        theme.init()
 
         let newWorker
         if ('serviceWorker' in navigator) {

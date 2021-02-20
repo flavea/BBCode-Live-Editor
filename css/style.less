@@ -128,7 +128,7 @@ button {
     cursor: pointer;
     border-radius: 4px;
 
-    &.new-draft {
+    &.menu-trigger {
         background: var(--text);
         color: var(--color-1);
         white-space: nowrap;
@@ -387,42 +387,71 @@ button {
     .menu-content {
         background: var(--color-2);
         color: var(--color-1);
-        padding: 2rem;
         width: 100%;
         height: 100%;
         overflow: auto;
         position: relative;
+        display: grid;
+        grid-template-columns: 25fr 75fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-template-areas:
+            ". .";
+
+        #menu-sidebar {
+            padding: 2em;
+        }
 
         .modal-close {
             position: absolute;
-            top: 10px;
+            top: 0px;
             cursor: pointer;
-            right: 10px
+            right: 0;
+            color: var(--color-1);
+            background: var(--color-2);
+            padding: 10px;
+            border-radius: 0 0 0 5px;
         }
 
-        .new-draft-button {
+        .menu-button {
             font-size: 16px;
-            margin: 5px;
+            margin: 5px 0;
             background: var(--color-1);
             color: var(--color-2);
-            
+            width: 100%;
+            display: grid;
+            grid-template-columns: 25fr 75fr;
+            grid-template-rows: 1fr;
+            gap: 0px 0px;
+            text-align: left;
+
+            i {
+                text-align: center
+            }
         }
 
-        
+        #drafts-list {
+            background: var(--color-1);
+            color: var(--color-2);
+            padding: 2rem;
+            max-height: 100%;
+            overflow: auto;
+        }
+
         .draft {
             background: var(--color-1);
-            color: var(--color-2);
-            display: block;
-            padding: 1em;
+            border-bottom: 2px dotted var(--color-2);
+            padding: 10px;
             margin: 5px;
             border-radius: 4px;
-            width: 25%;
-            display: inline-block;
-            
-            @media screen and (max-width: 767px) {
-                width: 100%;
-                display: block;
-            }
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-content: flex-start;
+            align-items: center;
+
 
             button {
                 color: var(--color-1);
@@ -436,12 +465,18 @@ button {
                 }
             }
 
-            div {
-                margin-bottom: 10px;
-                height: 100px;
-                overflow:hidden;
-                width: 98%;
+            >div:first-child {
+                width: 65%;
+                margin-right: 20px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
+
+            >div:last-child {
+                width: calc(35% - 20px)
+            }
+
         }
     }
 }
@@ -478,6 +513,7 @@ button {
     #container {
         #buttons {
             border-bottom: 0;
+
             &>div {
                 width: calc(100% - 10px);
             }
@@ -529,6 +565,20 @@ button {
 
         .menu-content {
             width: 100%;
+            display: block;
+
+            #drafts-list {
+                padding: 10px;
+            }
+
+            .draft {
+                display: block;
+
+                div {
+                    width: 100%!important;
+                    margin: 5px 0;
+                }
+            }
         }
     }
 }
@@ -540,7 +590,54 @@ button {
             font-size: .7rem;
         }
     }
-    .s-button:last-child, .s-button:nth-child(3) {
+
+    .s-button:last-child,
+    .s-button:nth-child(3) {
         display: none;
     }
+}
+
+.mdl-button {
+    border: 10px;
+    height: auto;
+    display: block;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 700;
+}
+
+.mdl-button--raised {
+    background: rgba(158, 158, 158, 0.20);
+    box-shadow: none;
+}
+
+.mdl-button--raised:active {
+    box-shadow: none;
+    background-color: rgba(158, 158, 158, 0.40)
+}
+
+.mdl-button--raised:focus:not(:active) {
+    box-shadow: none;
+    background-color: rgba(158, 158, 158, 0.40)
+}
+
+.firebaseui-card-content {
+    padding: 0;
+}
+
+.firebaseui-idp-google>.firebaseui-idp-text {
+    color: var(--color-2);
+    width: 80%;
+}
+
+.firebaseui-idp-button {
+    background: var(--color-1);
+    direction: ltr;
+    font-weight: 700;
+    height: auto;
+    line-height: normal;
+    max-width: 100%;
+    min-height: 40px;
+    padding: 8px 16px;
+    text-align: center;
+    width: 100%
 }
