@@ -73,13 +73,14 @@
     <script src="scripts/less.min.js"></script>
 </head>
 
-<body class="light">
+<body class="pink">
     <div id="container">
         <div id="buttons">
             <div>
                 <button class="menu-trigger" onclick="editor.openMenu()" title="Bold"><i class="fas fa-bars"></i>
                     MENU</button>
-                <button id="save" style="display: none" class="menu-trigger" onclick="editor.save()" title="Bold">Save</button>
+                <button id="save" style="display: none" class="menu-trigger" onclick="editor.save()"
+                    title="Bold">Save</button>
                 <button class="fas fa-bold" onclick="editor.apply('bold')" title="Bold"></button>
                 <button class="fas fa-italic" onclick="editor.apply('italic')" title="Italic"></button>
                 <button class="fas fa-strikethrough" onclick="editor.apply('strike')" title="Strikethrough"></button>
@@ -228,10 +229,14 @@
             <div class="modal-close fas fa-times" onclick="modal.close()"></div>
             <div id="menu-sidebar">
                 <div id="firebaseui-auth-container"></div>
-                <button class="menu-button" onclick="editor.new()"><i class="fas fa-file"></i> <span>New Draft</span></button>
-                <button class="menu-button" onclick="editor.saveFile()"><i class="fas fa-file-export"></i> <span>Save as File</span></button>
-                <button class="menu-button" onclick="editor.file.click()"><i class="fas fa-file-import"></i><span>Open File</span></button>
-                <button id="logout" style="display: none" class="menu-button" onclick="editor.logout()"><i class="fas fa-file-import"></i><span>Sign Out</span></button>
+                <button class="menu-button" onclick="editor.new()"><i class="fas fa-file"></i> <span>New
+                        Draft</span></button>
+                <button class="menu-button" onclick="editor.saveFile()"><i class="fas fa-file-export"></i> <span>Save as
+                        File</span></button>
+                <button class="menu-button" onclick="editor.file.click()"><i class="fas fa-file-import"></i><span>Open
+                        File</span></button>
+                <button id="logout" style="display: none" class="menu-button" onclick="editor.logout()"><i
+                        class="fas fa-file-import"></i><span>Sign Out</span></button>
                 <div style="display:none"><input type="file" id="file" accept=".docx,.txt"></div>
             </div>
             <div id="drafts-list"></div>
@@ -243,7 +248,7 @@
             <div class="modal-title">
                 Switch Theme
             </div>
-            <div class="flex">
+            <div class="modal-body" style="text-align: center">
                 <a class="theme-choice" id="light" onClick="theme.switchTheme('light')">
                     <img src="https://res.cloudinary.com/ilma/image/upload/v1587453187/bbcodeicons/light_efltah.jpg"
                         width="200px">
@@ -259,6 +264,11 @@
                         width="200px">
                     Dawn
                 </a>
+                <a class="theme-choice" id="dawn" onClick="theme.switchTheme('pink')">
+                    <img src="https://res.cloudinary.com/ilma/image/upload/v1613826189/Screen_Shot_2021-02-20_at_19.59.00_ekan2z.png"
+                        width="200px">
+                    Glutton
+                </a>
             </div>
         </div>
     </div>
@@ -268,17 +278,19 @@
             <div class="modal-title">
                 Info
             </div>
-            <p>A BBCode Text Editor.</p>
-            <ul>
-                <li>Site created by <a href="https://ilma.dev">Ilma.</a></li>
-                <li>Inspired by <a href="https://github.com/liyasthomas/marcdown">Marcdown</a>.</li>
-                <li>Using javascript bbcode rendering from <a
-                        href="https://codepen.io/qgustavor/pen/RaZmVR">qgustavor</a>.</li>
-                <li>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a
-                        href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>.</li>
-            </ul>
-            <center><b><u><a href="https://github.com/flavea/BBCode-Live-Editor">Contribute on Github</a></u></b>
-            </center>
+            <div class="modal-body">
+                <p>A BBCode Text Editor.</p>
+                <ul>
+                    <li>Site created by <a href="https://ilma.dev">Ilma.</a></li>
+                    <li>Inspired by <a href="https://github.com/liyasthomas/marcdown">Marcdown</a>.</li>
+                    <li>Using javascript bbcode rendering from <a
+                            href="https://codepen.io/qgustavor/pen/RaZmVR">qgustavor</a>.</li>
+                    <li>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
+                        <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>.</li>
+                </ul>
+                <center><b><u><a href="https://github.com/flavea/BBCode-Live-Editor">Contribute on Github</a></u></b>
+                </center>
+            </div>
         </div>
     </div>
     <div id="update" class="modal flex">
@@ -287,7 +299,9 @@
             <div class="modal-title">
                 New Update!
             </div>
-            Please click below button to update:
+            <div class="modal-body">
+                Please click below button to update:
+            </div>
 
             <button id="reload">Update</button>
         </div>
@@ -298,16 +312,18 @@
             <div class="modal-title">
                 Shortcuts
             </div>
-            Use below combinations for shortcuts
-            <ul>
-                <li><b>CTRL + B</b> for bolding text</li>
-                <li><b>CTRL + I</b> for italizing text</li>
-                <li><b>CTRL + E</b> for centering text</li>
-                <li><b>CTRL + SHIFT + U</b> for underlining text</li>
-                <li><b>CTRL + SHIFT + R</b> for aligning text to the right</li>
-                <li><b>CTRL + SHIFT + J</b> for justifying text</li>
-                <li><b>CTRL + SHIFT + L</b> for inserting link</li>
-            </ul>
+            <div class="modal-body">
+                Use below combinations for shortcuts
+                <ul>
+                    <li><b>CTRL + B</b> for bolding text</li>
+                    <li><b>CTRL + I</b> for italizing text</li>
+                    <li><b>CTRL + E</b> for centering text</li>
+                    <li><b>CTRL + SHIFT + U</b> for underlining text</li>
+                    <li><b>CTRL + SHIFT + R</b> for aligning text to the right</li>
+                    <li><b>CTRL + SHIFT + J</b> for justifying text</li>
+                    <li><b>CTRL + SHIFT + L</b> for inserting link</li>
+                </ul>
+            </div>
         </div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-app.js"></script>
