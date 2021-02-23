@@ -313,24 +313,43 @@ const parser = {
 
         return str
     },
+    getDrafts: function (id) {
+        let documents = localStorage.documents
+        if (documents) {
+            documents = JSON.parse(documents)
+            if (id) {
+                const data = documents.find(doc => doc.id == id)
+                return data
+            } else {
+                return documents
+            }
+        }
+
+        return []
+    },
+    uuid: function () {
+        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        )
+    },
     render: function (type) {
         let id = 'draft-' + parser.uuid()
         const url = new URLSearchParams(window.location.search)
-        const drafts = Object.keys(localStorage).filter(draft => draft.startsWith('draft-'))
+        let drafts = parser.getDrafts()
         if (url.has('id')) {
             id = url.get('id')
-            if (typeof type === 'boolean') {
-                parser.input.value = localStorage.getItem(id)
-                parser.input.value = parser.smartSymbols()
+            const draft = parser.getDrafts(id)
+            if (draft && draft.content && typeof type === 'boolean') {
+                parser.input.value = draft.content
             }
+        } else if (drafts.length > 0 && typeof type === 'boolean') {
+            const data = drafts[0]
+            id = data.id
+            parser.input.value = data.content || ''
+        } else if (typeof type === 'boolean') {
+            parser.output.innerHTML = parser.input.value = defaultContent
         }
-        else if (drafts.length > 0) {
-            id = drafts[0]
-            if (typeof type === 'boolean') {
-                parser.input.value = localStorage.getItem(id)
-                parser.input.value = parser.smartSymbols()
-            }
-        }
+
         const selection = parser.input.selectionEnd
         const initialInput = parser.input.value.length
         const content = parser.input.value = parser.smartSymbols()
@@ -344,37 +363,29 @@ const parser = {
         parser.characters.innerText = text.length
         parser.count()
 
-        localStorage.setItem(id, content)
-        history.pushState('', "BBCode Live Editor", "?id=" + id)
-        editor.setDrafts(true)
-    },
-    uuid: function () {
-        return (Object.keys(localStorage).filter(draft => draft.startsWith('draft-')).length + 1) + '-' + ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-        )
+        let currDraft = drafts.find(d => d.id == id)
+        drafts = drafts.filter(d => d.id != id)
+        let data = {
+            ...currDraft,
+            id,
+            content,
+            saved: false,
+        }
+
+        drafts = [data, ...drafts]
+
+        localStorage.setItem('documents', JSON.stringify(drafts))
+        history.replaceState('', "BBCode Live Editor", "?id=" + id)
     },
     count: function () {
         var _z = 0,
-        _words = parser.output.innerText.split(/\s/g);
+            _words = parser.output.innerText.split(/\s/g);
         for (var i = 0; i < _words.length; i++) {
             if (_words[i].length >= 1) _z++;
         }
         parser.words.innerText = _z + " word" + (_z == 1 ? "" : "s");
     },
     init: function () {
-        const url = new URLSearchParams(window.location.search)
-        if (localStorage && localStorage.content && localStorage.content != '') {
-            const id = 'draft-' + parser.uuid()
-            parser.input.value = localStorage.content
-            localStorage.setItem(id, parser.input.value)
-        } else if (url.has('id')) {
-            const id = url.get('id')
-            parser.input.value = localStorage.getItem(id)
-            history.replaceState('', "BBCode Live Editor", "?id=" + id)
-        }
-        
-        localStorage.removeItem('content')
-
         parser.input.oninput = parser.render
 
         let inputScrollSync = false
@@ -397,5 +408,7 @@ const parser = {
         }
 
         parser.render(true)
+
+        
     }
 }

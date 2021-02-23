@@ -1,20 +1,6 @@
 <html>
 
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-44755840-3"></script>
-
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-44755840-3');
-    </script>
-
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no">
@@ -67,6 +53,8 @@
 
     <link href="css/fonts.css" rel="stylesheet">
     <link rel="stylesheet" href="css/fa.css">
+    <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
     <link rel="stylesheet/less" type="text/css" href="css/style.less" />
     <script src="scripts/less.min.js"></script>
 </head>
@@ -75,8 +63,10 @@
     <div id="container">
         <div id="buttons">
             <div>
-                <button class="new-draft" onclick="modal.open('menu')" title="Bold"><i class="fas fa-bars"></i>
+                <button class="menu-trigger" onclick="editor.openMenu()" title="Bold"><i class="fas fa-bars"></i>
                     MENU</button>
+                <button id="save" style="display: none" class="menu-trigger" onclick="editor.save()"
+                    title="Bold">Save</button>
                 <button class="fas fa-bold" onclick="editor.apply('bold')" title="Bold"></button>
                 <button class="fas fa-italic" onclick="editor.apply('italic')" title="Italic"></button>
                 <button class="fas fa-strikethrough" onclick="editor.apply('strike')" title="Strikethrough"></button>
@@ -96,7 +86,6 @@
                 <button onclick="editor.apply('html')" title="HTML">DOHTML</button>
                 <button onclick="editor.apply('roll')" title="Dice Roll">ROLL</button>
                 <button onclick="editor.spoiler('spoiler')" title="Spoiler">SPOILER</button>
-                <button onclick="editor.showMention()" title="Dice Roll">@MENTION</button>
                 <select name="font" onchange="editor.apply('font', this.options[this.selectedIndex].value)">
                     <option value="0">Font Family</option>
                     <option value="Arial" style="font-family:Arial">Arial</option>
@@ -181,55 +170,65 @@
             <div class="modal-title">
                 Setting
             </div>
-            <label for="editor-font">Editor Font</label>
-            <select name="editor-font" onchange="theme.changeFont('editor', this.options[this.selectedIndex].value)">
-                <option value="Arial" style="font-family:Arial">Arial</option>
-                <option value="Times" style="font-family:Times">Times</option>
-                <option value="Calibri" style="font-family:Calibri">Calibri</option>
-                <option value="Cambria" style="font-family:Cambria">Cambria</option>
-                <option value="Comic Sans MS" style="font-family:Comic Sans MS">Comic Sans MS</option>
-                <option value="Courier" style="font-family:Courier">Courier</option>
-                <option value="Geneva" style="font-family:Geneva">Geneva</option>
-                <option value="Optima" style="font-family:Optima">Optima</option>
-                <option value="Special Elite" style="font-family: Special Elite">Special Elite</option>
-                <option value="Georgia" style="font-family: Georgia;">Georgia</option>
-                <option value="Lato" style="font-family: Lato;">Lato</option>
-                <option value="Noto Sans" style="font-family: Noto Sans">Noto Sans</option>
-                <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
-                <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
-                <option value="Source Code Pro" style="font-family: Source Code Pro" selected>Source Code Pro</option>
-            </select>
-            <label for="preview-font">Preview Font</label>
-            <select name="preview-font" onchange="theme.changeFont('preview', this.options[this.selectedIndex].value)">
-                <option value="Arial" style="font-family:Arial">Arial</option>
-                <option value="Times" style="font-family:Times">Times</option>
-                <option value="Calibri" style="font-family:Calibri">Calibri</option>
-                <option value="Cambria" style="font-family:Cambria">Cambria</option>
-                <option value="Comic Sans MS" style="font-family:Comic Sans MS">Comic Sans MS</option>
-                <option value="Courier" style="font-family:Courier">Courier</option>
-                <option value="Geneva" style="font-family:Geneva">Geneva</option>
-                <option value="Optima" style="font-family:Optima">Optima</option>
-                <option value="Special Elite" style="font-family: Special Elite">Special Elite</option>
-                <option value=" Georgia" style="font-family: Georgia;">Georgia</option>
-                <option value="Lato" style="font-family: Lato;">Lato</option>
-                <option value="Noto Sans" style="font-family: Noto Sans" selected>Noto Sans</option>
-                <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
-                <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
-                <option value="Source Code Pro" style="font-family: Source Code Pro">Source Code Pro</option>
-            </select>
-            <label for="font-size">Font Size</label>
-            <input type="number" id="font-size" value="16" onchange="theme.changeFont('size', this.value)">
+            <div class="modal-body">
+                <label for="editor-font">Editor Font</label>
+                <select name="editor-font"
+                    onchange="theme.changeFont('editor', this.options[this.selectedIndex].value)">
+                    <option value="Arial" style="font-family:Arial">Arial</option>
+                    <option value="Times" style="font-family:Times">Times</option>
+                    <option value="Calibri" style="font-family:Calibri">Calibri</option>
+                    <option value="Cambria" style="font-family:Cambria">Cambria</option>
+                    <option value="Comic Sans MS" style="font-family:Comic Sans MS">Comic Sans MS</option>
+                    <option value="Courier" style="font-family:Courier">Courier</option>
+                    <option value="Geneva" style="font-family:Geneva">Geneva</option>
+                    <option value="Optima" style="font-family:Optima">Optima</option>
+                    <option value="Special Elite" style="font-family: Special Elite">Special Elite</option>
+                    <option value="Georgia" style="font-family: Georgia;">Georgia</option>
+                    <option value="Lato" style="font-family: Lato;">Lato</option>
+                    <option value="Noto Sans" style="font-family: Noto Sans">Noto Sans</option>
+                    <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
+                    <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
+                    <option value="Source Code Pro" style="font-family: Source Code Pro" selected>Source Code Pro
+                    </option>
+                </select>
+                <label for="preview-font">Preview Font</label>
+                <select name="preview-font"
+                    onchange="theme.changeFont('preview', this.options[this.selectedIndex].value)">
+                    <option value="Arial" style="font-family:Arial">Arial</option>
+                    <option value="Times" style="font-family:Times">Times</option>
+                    <option value="Calibri" style="font-family:Calibri">Calibri</option>
+                    <option value="Cambria" style="font-family:Cambria">Cambria</option>
+                    <option value="Comic Sans MS" style="font-family:Comic Sans MS">Comic Sans MS</option>
+                    <option value="Courier" style="font-family:Courier">Courier</option>
+                    <option value="Geneva" style="font-family:Geneva">Geneva</option>
+                    <option value="Optima" style="font-family:Optima">Optima</option>
+                    <option value="Special Elite" style="font-family: Special Elite">Special Elite</option>
+                    <option value=" Georgia" style="font-family: Georgia;">Georgia</option>
+                    <option value="Lato" style="font-family: Lato;">Lato</option>
+                    <option value="Noto Sans" style="font-family: Noto Sans" selected>Noto Sans</option>
+                    <option value="Montserrat" style="font-family: Montserrat;">Montserrat</option>
+                    <option value="Playfair Display" style="font-family: Playfair Display">Playfair Display</option>
+                    <option value="Source Code Pro" style="font-family: Source Code Pro">Source Code Pro</option>
+                </select>
+                <label for="font-size">Font Size</label>
+                <input type="number" id="font-size" value="16" onchange="theme.changeFont('size', this.value)"></div>
         </div>
     </div>
     <div id="menu" class="modal">
         <div class="menu-content">
             <div class="modal-close fas fa-times" onclick="modal.close()"></div>
-            <button class="new-draft-button" onclick="editor.new()"><i class="fas fa-file"></i> NEW DRAFT</button>
-            <button class="new-draft-button" onclick="editor.saveFile()"><i class="fas fa-file-export"></i> SAVE AS
-                FILE</button>
-            <button class="new-draft-button" onclick="editor.file.click()"><i class="fas fa-file-import"></i> OPEN
-                FILE</button>
-            <div style="display:none"><input type="file" id="file" accept=".docx,.txt"></div>
+            <div id="menu-sidebar">
+                <div id="firebaseui-auth-container"></div>
+                <button class="menu-button" onclick="editor.new()"><i class="fas fa-file"></i> <span>New
+                        Draft</span></button>
+                <button class="menu-button" onclick="editor.saveFile()"><i class="fas fa-file-export"></i> <span>Save as
+                        File</span></button>
+                <button class="menu-button" onclick="editor.file.click()"><i class="fas fa-file-import"></i><span>Open
+                        File</span></button>
+                <button id="logout" style="display: none" class="menu-button" onclick="editor.logout()"><i
+                        class="fas fa-file-import"></i><span>Sign Out</span></button>
+                <div style="display:none"><input type="file" id="file" accept=".docx,.txt"></div>
+            </div>
             <div id="drafts-list"></div>
         </div>
     </div>
@@ -239,7 +238,7 @@
             <div class="modal-title">
                 Switch Theme
             </div>
-            <div class="flex">
+            <div class="modal-body" style="text-align: center">
                 <a class="theme-choice" id="light" onClick="theme.switchTheme('light')">
                     <img src="https://res.cloudinary.com/ilma/image/upload/v1587453187/bbcodeicons/light_efltah.jpg"
                         width="200px">
@@ -255,6 +254,11 @@
                         width="200px">
                     Dawn
                 </a>
+                <a class="theme-choice" id="dawn" onClick="theme.switchTheme('pink')">
+                    <img src="https://res.cloudinary.com/ilma/image/upload/v1613826189/Screen_Shot_2021-02-20_at_19.59.00_ekan2z.png"
+                        width="200px">
+                    Glutton
+                </a>
             </div>
         </div>
     </div>
@@ -264,17 +268,19 @@
             <div class="modal-title">
                 Info
             </div>
-            <p>A BBCode Text Editor.</p>
-            <ul>
-                <li>Site created by <a href="https://ilma.dev">Ilma.</a></li>
-                <li>Inspired by <a href="https://github.com/liyasthomas/marcdown">Marcdown</a>.</li>
-                <li>Using javascript bbcode rendering from <a
-                        href="https://codepen.io/qgustavor/pen/RaZmVR">qgustavor</a>.</li>
-                <li>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a
-                        href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>.</li>
-            </ul>
-            <center><b><u><a href="https://github.com/flavea/BBCode-Live-Editor">Contribute on Github</a></u></b>
-            </center>
+            <div class="modal-body">
+                <p>A BBCode Text Editor.</p>
+                <ul>
+                    <li>Site created by <a href="https://ilma.dev">Ilma.</a></li>
+                    <li>Inspired by <a href="https://github.com/liyasthomas/marcdown">Marcdown</a>.</li>
+                    <li>Using javascript bbcode rendering from <a
+                            href="https://codepen.io/qgustavor/pen/RaZmVR">qgustavor</a>.</li>
+                    <li>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
+                        <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>.</li>
+                </ul>
+                <center><b><u><a href="https://github.com/flavea/BBCode-Live-Editor">Contribute on Github</a></u></b>
+                </center>
+            </div>
         </div>
     </div>
     <div id="update" class="modal flex">
@@ -283,7 +289,9 @@
             <div class="modal-title">
                 New Update!
             </div>
-            Please click below button to update:
+            <div class="modal-body">
+                Please click below button to update:
+            </div>
 
             <button id="reload">Update</button>
         </div>
@@ -294,31 +302,34 @@
             <div class="modal-title">
                 Shortcuts
             </div>
-            Use below combinations for shortcuts
-            <ul>
-                <li><b>CTRL + B</b> for bolding text</li>
-                <li><b>CTRL + I</b> for italizing text</li>
-                <li><b>CTRL + E</b> for centering text</li>
-                <li><b>CTRL + SHIFT + U</b> for underlining text</li>
-                <li><b>CTRL + SHIFT + R</b> for aligning text to the right</li>
-                <li><b>CTRL + SHIFT + J</b> for justifying text</li>
-                <li><b>CTRL + SHIFT + L</b> for inserting link</li>
-            </ul>
+            <div class="modal-body">
+                Use below combinations for shortcuts
+                <ul>
+                    <li><b>CTRL + B</b> for bolding text</li>
+                    <li><b>CTRL + I</b> for italizing text</li>
+                    <li><b>CTRL + E</b> for centering text</li>
+                    <li><b>CTRL + SHIFT + U</b> for underlining text</li>
+                    <li><b>CTRL + SHIFT + R</b> for aligning text to the right</li>
+                    <li><b>CTRL + SHIFT + J</b> for justifying text</li>
+                    <li><b>CTRL + SHIFT + L</b> for inserting link</li>
+                </ul>
+            </div>
         </div>
     </div>
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-firestore.js"></script>
+    <script src="scripts/modal.js"></script>
     <script src="scripts/parser.js"></script>
     <script src="scripts/editor.js"></script>
     <script src="scripts/theme.js"></script>
-    <script src="scripts/modal.js"></script>
+    <script src="scripts/firebase.js"></script>
     <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.9/mammoth.browser.min.js"></script>
     <script>
         if (Storage == void 0) {
             alert('Your browser does not support saving feature. You still can use the app without the feature.')
         }
-        parser.init()
-        editor.init()
-        theme.init()
 
         let newWorker
         if ('serviceWorker' in navigator) {

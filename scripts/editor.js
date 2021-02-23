@@ -78,10 +78,6 @@ const editor = {
                 before = `[align=${type}]`
                 after = '[/align]'
                 break
-            case 'mention':
-                before = `@[${document.getElementById('members').value}`
-                after = ']'
-                break
         }
         document.querySelectorAll('#buttons select').forEach(el => el.value = 0);
         if (document.selection) {
@@ -107,43 +103,6 @@ const editor = {
         }
         parser.render()
     },
-    showMention: function () {
-        const shownStatus = document.getElementById('mentions').style.display
-        if (shownStatus === 'block') {
-            document.getElementById('mentions').style.display = "none"
-        } else {
-            document.getElementById('mentions').style.display = "block"
-        }
-    },
-    fetchMembers: function (forum = 'eleftheria') {
-        const members = document.getElementById('members')
-        members.innerHTML = 'Loading...'
-        let url = ''
-        if (forum === 'eleftheria') url = 'https://rp.prosa.id/emembers?_limit=9999&_sort=Name:ASC'
-        fetch(url).then(function (response) {
-            if (response.ok) {
-                return response.json()
-            } else {
-                return Promise.reject(response)
-            }
-        }).then(function (data) {
-            members.innerHTML = ''
-            data.forEach(member => {
-                let name = member.Name.toLowerCase().split(' ')
-                for (var i = 0; i < name.length; i++) {
-                    if (name[i].length <= 2) {
-                        name[i] = name[i][0].toUpperCase() + name[i][1].toUpperCase() + name[i].slice(2)
-                    } else {
-                        name[i] = name[i][0].toUpperCase() + name[i].slice(1)
-                    }
-                }
-                name = name.join(' ')
-                members.innerHTML += `<option value="${name}">${name}</option>`
-            })
-        }).catch(function (err) {
-            console.warn('Something went wrong.', err)
-        })
-    },
     shortcuts: function (e) {
         if (e.ctrlKey && e.which == 66) {
             editor.apply('bold')
@@ -161,10 +120,67 @@ const editor = {
             editor.apply('link')
         }
     },
+    getDrafts: function (id) {
+        let documents = localStorage.getItem('documents')
+        if (documents) {
+            documents = JSON.parse(documents)
+            if (id) {
+                const data = documents.find(doc => doc.id == id)
+                return data
+            } else {
+                return documents
+            }
+        }
+
+        return []
+    },
+    setDrafts: function () {
+        const drafts = parser.getDrafts()
+        const selector = document.getElementById('drafts-list')
+        let html = ''
+        drafts.forEach((draft, i) => {
+            let content = draft.content.split('.')[0]
+            html += `<div class="draft"><div>${content}</div><div class="flex"><button onclick="editor.open('${draft.id}')">Open</button> <button class="delete" onclick="editor.delete('${draft.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`
+
+        })
+        selector.innerHTML = html
+    },
+    openMenu: function () {
+        modal.open('menu')
+        editor.setDrafts()
+    },
     new: function () {
+        const email = localStorage.getItem('email')
         let id = 'draft-' + parser.uuid()
-        parser.output.innerHTML = parser.input.value = ''
-        editor.open(id)
+        const data = {
+            content: defaultContent,
+            email,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }
+        if (email && window.db) {
+            window.db.collection("documents").add(data)
+                .then((docRef) => {
+                    let documents = localStorage.getItem('documents')
+                    documents = documents ? JSON.parse(documents) : []
+                    documents.push({
+                        id: docRef.id,
+                        ...data,
+                        saved: true
+                    })
+                    localStorage.setItem("documents", JSON.stringify(documents))
+
+                    parser.output.innerHTML = parser.input.value = defaultContent
+                    editor.open(docRef.id)
+                })
+                .catch((error) => {
+                    parser.output.innerHTML = parser.input.value = defaultContent
+                    editor.open(id)
+                    console.error("Error adding document: ", error);
+                });
+        } else {
+            parser.output.innerHTML = parser.input.value = defaultContent
+            editor.open(id)
+        }
     },
     open: function (key) {
         history.pushState('', "BBCode Live Editor", "?id=" + key)
@@ -187,19 +203,68 @@ const editor = {
     },
     delete: function (key, i) {
         const url = new URLSearchParams(window.location.search)
-        const drafts = Object.keys(localStorage).filter(draft => draft.startsWith('draft-'))
+        let drafts = editor.getDrafts()
 
-        if(confirm('Are you sure you want to delete this draft?')) {
-            localStorage.removeItem(key)
+        if (confirm('Are you sure you want to delete this draft?')) {
+            const email = localStorage.getItem('email')
+
+            if (email && window.db) {
+                window.db.collection("documents").doc(key).delete()
+            }
 
             if (drafts.length === 1) {
+                localStorage.setItem('documents', '[]')
                 editor.new()
             } else if (url.get('id') === key) {
-                const temp = drafts.filter(d => d != key)[0]
-                parser.input.value = localStorage.getItem(temp)
-                history.pushState('', "BBCode Live Editor", "?id=" + temp)
+                drafts = drafts.filter(d => d.id != key)
+                localStorage.setItem('documents', JSON.stringify(drafts))
+                const temp = drafts[0]
+                parser.input.value = temp.content || ''
+                history.pushState('', "BBCode Live Editor", "?id=" + temp.id)
+            } else {
+                drafts = drafts.filter(d => d.id != key)
+                localStorage.setItem('documents', JSON.stringify(drafts))
             }
-            parser.render({})
+
+            editor.setDrafts()
+            parser.render()
+        }
+    },
+    save: function () {
+        const email = localStorage.getItem('email')
+        if (email && window.db) {
+            document.getElementById('save').innerHTML = 'Saving...'
+            const url = new URLSearchParams(window.location.search)
+            if (url.has('id')) {
+                id = url.get('id')
+                const draft = parser.getDrafts(id)
+                if (draft && draft.content && !Boolean(draft.saved)) {
+                    const data = {
+                        ...draft,
+                        saved: true,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    }
+
+                    window.db.collection("documents").doc(id).update(data)
+                        .then(() => {
+                            console.log(new Date(), 'Saving...')
+                            let drafts = parser.getDrafts()
+                            drafts = drafts.filter(d => d.id != id)
+                            drafts = [data, ...drafts]
+
+                            localStorage.setItem('documents', JSON.stringify(drafts))
+                            document.getElementById('save').innerHTML = 'Save'
+                        })
+                        .catch((error) => {
+                            console.error(new Date(), error)
+                            document.getElementById('save').innerHTML = 'Save'
+                        });
+                } else {
+                    document.getElementById('save').innerHTML = 'Save'
+                }
+            } else {
+                document.getElementById('save').innerHTML = 'Save'
+            }
         }
     },
     openTab: function (which) {
@@ -216,24 +281,17 @@ const editor = {
             document.getElementById('right').style.display = 'block'
         }
     },
-    setDrafts: function (typing = false) {
-        if (typing) document.getElementById('drafts-list').innerHTML = ''
-        const drafts = Object.keys(localStorage).filter(draft => draft.startsWith('draft-'))
-        drafts.forEach((draft, i) => {
-            const selector = document.getElementById('drafts-list')
-            const curr = selector.innerHTML
-            const data = {
-                key: draft,
-                content: localStorage.getItem(draft).substring(0, 100)+'...'
-            }
-            const html = `<div class="draft"><div>${data.content}</div><div class="flex"><button onclick="editor.open('${data.key}')">Open</button> <button class="delete" onclick="editor.delete('${data.key}')"><i class="fas fa-trash"></i> Delete</button></div></div>`
-            selector.innerHTML = curr + html
-        })
+    logout: function() {
+        firebase.auth().signOut()
+        localStorage.removeItem('email')
     },
     init: function () {
-        document.onkeyup = editor.shortcuts
-        editor.fetchMembers()
         editor.setDrafts()
+        setInterval(() => {
+            editor.save()
+        }, 30000);
+
+        document.onkeyup = editor.shortcuts
         editor.file.addEventListener("change", function () {
             if (this.files && this.files[0]) {
                 var myFile = this.files[0];
@@ -242,9 +300,6 @@ const editor = {
                     if (['docx', 'txt'].includes(filename[filename.length - 1])) {
                         var reader = new FileReader();
                         let fname = filename[0]
-                        if (!fname.startsWith('draft')) {
-                            fname = 'draft-' + fname
-                        }
                         if (filename[filename.length - 1].includes('doc')) {
                             reader.addEventListener('load', function (e) {
                                 mammoth.convertToHtml({
@@ -271,6 +326,30 @@ const editor = {
                                     html = html.replace(/<p\s*[\/]?>/gi, "\n");
                                     parser.input.value = html
                                     history.pushState('', "BBCode Live Editor", "?id=" + fname)
+                                    const email = localStorage.getItem('email')
+                                    if (email && window.db) {
+                                        const data = {
+                                            content: html,
+                                            email,
+                                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                                        }
+                                        window.db.collection("documents").doc(fname).add({
+                                                data
+                                            })
+                                            .then((docRef) => {
+                                                let documents = localStorage.getItem('documents')
+                                                documents = documents ? JSON.parse(documents) : []
+                                                documents.push({
+                                                    id: fname,
+                                                    ...data,
+                                                    saved: true
+                                                })
+                                                localStorage.setItem("documents", JSON.stringify(documents))
+                                            })
+                                            .catch((error) => {
+                                                console.error("Error adding document: ", error);
+                                            });
+                                    }
                                     parser.render()
                                     modal.close()
                                 })
@@ -279,6 +358,30 @@ const editor = {
                         } else if (filename[filename.length - 1].includes('txt')) {
                             reader.addEventListener('load', function (e) {
                                 parser.input.value = e.target.result
+                                const email = localStorage.getItem('email')
+                                if (email && window.db) {
+                                    const data = {
+                                        content: parser.input.value,
+                                        email,
+                                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                                    }
+                                    window.db.collection("documents").doc(fname).add({
+                                            data
+                                        })
+                                        .then((docRef) => {
+                                            let documents = localStorage.getItem('documents')
+                                            documents = documents ? JSON.parse(documents) : []
+                                            documents.push({
+                                                id: fname,
+                                                ...data,
+                                                saved: true
+                                            })
+                                            localStorage.setItem("documents", JSON.stringify(documents))
+                                        })
+                                        .catch((error) => {
+                                            console.error("Error adding document: ", error);
+                                        });
+                                }
                                 history.pushState('', "BBCode Live Editor", "?id=" + fname)
                                 parser.render()
                                 modal.close()
