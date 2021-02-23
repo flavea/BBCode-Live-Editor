@@ -4,12 +4,26 @@
 **Current Features**
 * Live preview
 * Sync Scrolling
-* Several Themes: Clear Sky, Sunset, Dawn
+* Several Themes: Clear Sky, Sunset, Dawn, Glutton
 * Changing editor and preview font and font size
 * Shortcuts
 * Can be installed as a PWA
 * Save as text file
 * Open txt and docx file
+* Save and sync on cloud
+
+**Note**
+
+To run locally and enable cloud/firebase, add your own configuration on `firebase.js`. On your firebase project, create a database on firestore and create document named 'documents'.
+
+```const firebaseConfig = {
+    apiKey: apiKey,
+    authDomain: authDomain,
+    projectId: projectId,
+    storageBucket: storageBucket
+    messagingSenderId: messagingSenderId,
+    appId: appId
+};```
 
 **Credits**
 *   Inspired by [Marcdown](https://github.com/liyasthomas/marcdown).
