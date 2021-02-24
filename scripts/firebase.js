@@ -1,4 +1,4 @@
-if (firebaseConfig && typeof firebase != 'undefined') {
+if (typeof firebaseConfig != 'undefined' && typeof firebase != 'undefined') {
   firebase.initializeApp(firebaseConfig)
 
   const initApp = function () {
@@ -34,31 +34,7 @@ if (firebaseConfig && typeof firebase != 'undefined') {
 
       if (currEmail) {
         window.db = firebase.firestore()
-        window.addEventListener("beforeunload", async () => {
-          let currDocuments = JSON.parse(currDocuments)
-          currDocuments = localStorage.getItem('documents')
-          if (currDocuments) {
-            currDocuments = currDocuments ? currDocuments.filter(doc => !doc.saved) : []
-            if (currDocuments && currDocuments.length) {
-              currDocuments.forEach(async (doc) => {
-                await window.db.collection("documents").doc(doc.id).update(data)
-                  .then(() => {
-                    documents = documents.filter(d => d.id != doc.id)
-                    documents.push({
-                      id: doc.id,
-                      ...data
-                    })
-                    localStorage.setItem("documents", JSON.stringify(documents))
-                    return documents
-                  })
-                  .catch((error) => {
-                    console.error("Error updating document: ", error);
-                  });
-              })
-            }
-          }
-          return;
-        });
+        
         window.db.collection("documents").where("email", "==", currEmail).orderBy("timestamp", "desc").get()
           .then((querySnapshot) => {
             let documents = []
@@ -72,9 +48,10 @@ if (firebaseConfig && typeof firebase != 'undefined') {
             })
 
             currDocuments = localStorage.getItem('documents')
+
             if (currDocuments) {
               currDocuments = JSON.parse(currDocuments)
-              currDocuments = currDocuments ? currDocuments.filter(doc => !doc.saved) : []
+              currDocuments = currDocuments ? currDocuments.filter(doc => !Boolean(doc.saved)) : []
               if (currDocuments && currDocuments.length) {
                 const toSync = confirm('You have unsaved drafts, save them to your account? (If you choose no, your unsaved drafts might be gone.)')
                 if (toSync) {
@@ -113,6 +90,8 @@ if (firebaseConfig && typeof firebase != 'undefined') {
                 }
               }
             }
+
+            localStorage.setItem("documents", JSON.stringify(documents))
 
             parser.init()
             editor.init()

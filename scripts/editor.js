@@ -135,15 +135,50 @@ const editor = {
         return []
     },
     setDrafts: function () {
-        const drafts = parser.getDrafts()
-        const selector = document.getElementById('drafts-list')
-        let html = ''
-        drafts.forEach((draft, i) => {
-            let content = draft.content.split('.')[0]
-            html += `<div class="draft"><div>${content}</div><div class="flex"><button onclick="editor.open('${draft.id}')">Open</button> <button class="delete" onclick="editor.delete('${draft.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`
+        const email = localStorage.getItem('email')
+        if (window.db && email) {
+            window.db.collection("documents").where("email", "==", email).orderBy("timestamp", "desc").get()
+            .then((querySnapshot) => {
+                let documents = []
+                querySnapshot.forEach((doc) => {
+                    documents.push({
+                        id: doc.id,
+                        ...doc.data(),
+                        saved: true
+                    })
+                })
 
-        })
-        selector.innerHTML = html
+                const url = new URLSearchParams(window.location.search)
+                const currId = url.get('id') || ''
+
+                documents = documents.filter(d => d.id != currId)
+                let ids = documents.map(d => d.id)
+                let drafts = parser.getDrafts()
+                drafts = drafts.filter(d => !ids.includes(d.id))
+                drafts = [...documents, ...drafts]
+
+                localStorage.setItem("documents", JSON.stringify(drafts))
+
+                const selector = document.getElementById('drafts-list')
+                let html = ''
+                drafts.forEach((draft, i) => {
+                    let content = draft.content.split('.')[0]
+                    html += `<div class="draft"><div>${content}</div><div class="flex"><button onclick="editor.open('${draft.id}')">Open</button> <button class="delete" onclick="editor.delete('${draft.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`
+        
+                })
+                selector.innerHTML = html
+            })
+        } else {
+            const drafts = parser.getDrafts()
+            const selector = document.getElementById('drafts-list')
+            let html = ''
+            drafts.forEach((draft, i) => {
+                let content = draft.content.split('.')[0]
+                html += `<div class="draft"><div>${content}</div><div class="flex"><button onclick="editor.open('${draft.id}')">Open</button> <button class="delete" onclick="editor.delete('${draft.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`
+    
+            })
+            selector.innerHTML = html
+        }
     },
     openMenu: function () {
         modal.open('menu')
@@ -183,9 +218,29 @@ const editor = {
         }
     },
     open: function (key) {
-        history.pushState('', "BBCode Live Editor", "?id=" + key)
-        parser.render(true)
-        modal.close()
+        const url = new URLSearchParams(window.location.search)
+        const id = url.get('id')
+        if (id) {
+            let draft = editor.getDrafts(id)
+            if (draft && !Boolean(draft.saved)) {
+                const confirmed = confirm('Your draft is not saved yet, save now?')
+                if (confirmed) {
+                    editor.save()
+                } 
+
+                history.pushState('', "BBCode Live Editor", "?id=" + key)
+                parser.render(true)
+                modal.close()
+            } else {
+                history.pushState('', "BBCode Live Editor", "?id=" + key)
+                parser.render(true)
+                modal.close()
+            }
+        } else {
+            history.pushState('', "BBCode Live Editor", "?id=" + key)
+            parser.render(true)
+            modal.close()
+        }
     },
     saveFile: function () {
         const type = "text/plain;charset=utf-8"
@@ -286,7 +341,6 @@ const editor = {
         localStorage.removeItem('email')
     },
     init: function () {
-        editor.setDrafts()
         setInterval(() => {
             editor.save()
         }, 30000);
