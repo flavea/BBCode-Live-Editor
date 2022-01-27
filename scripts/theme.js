@@ -13,7 +13,7 @@ const theme = {
         document.querySelectorAll('.theme-choice').forEach(e => e.classList.remove("active"))
         document.getElementById(palette).classList.add("active")
     },
-    changeFont: function(type, value) {
+    changeFont: function (type, value) {
         if (type === 'editor') {
             parser.input.style.fontFamily = theme.themeSetting.editorFont = value
         }
@@ -26,6 +26,19 @@ const theme = {
         localStorage.themeSetting = JSON.stringify(theme.themeSetting)
     },
     init: function () {
+        const autoformatcheck = document.getElementById('autoformat-check')
+        autoformatcheck.addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                localStorage.autoformat = 'true'
+            } else {
+                localStorage.autoformat = 'false'
+            }
+        })
+
+        if (!localStorage.autoformat) localStorage.autoformat = 'true'
+        else if (localStorage.autoformat === 'true') autoformatcheck.checked = true
+        else if (localStorage.autoformat === 'false') autoformatcheck.checked = false
+
         if (localStorage && localStorage.themeSetting) {
             theme.themeSetting = JSON.parse(localStorage.themeSetting)
             let currentTheme = theme.themeSetting.theme

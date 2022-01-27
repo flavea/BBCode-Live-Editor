@@ -4,13 +4,13 @@
 /* A version number is useful when updating the worker logic,
    allowing you to remove outdated cache entries during the update.
 */
-var version = '6';
+const version = '7';
 
 /* These resources will be downloaded and cached by the service worker
    during the installation process. If any resource fails to be downloaded,
    then the service worker won't be installed either.
 */
-var offlineFundamentals = [
+const offlineFundamentals = [
   '',
   'css/fa.css',
   'css/fonts.css',
@@ -100,7 +100,7 @@ self.addEventListener("fetch", function(event) {
            Read more:
            https://ponyfoo.com/articles/progressive-networking-serviceworker
         */
-        var networked = fetch(event.request)
+        const networked = fetch(event.request)
           // We handle the network request with success and failure scenarios.
           .then(fetchedFromNetwork, unableToResolve)
           // We should catch errors on the fetchedFromNetwork handler as well.
@@ -115,7 +115,7 @@ self.addEventListener("fetch", function(event) {
           /* We copy the response before replying to the network request.
              This is the response that will be stored on the ServiceWorker cache.
           */
-          var cacheCopy = response.clone();
+          const cacheCopy = response.clone();
 
 
           caches

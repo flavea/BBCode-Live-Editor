@@ -211,7 +211,10 @@
                     <option value="Source Code Pro" style="font-family: Source Code Pro">Source Code Pro</option>
                 </select>
                 <label for="font-size">Font Size</label>
-                <input type="number" id="font-size" value="16" onchange="theme.changeFont('size', this.value)"></div>
+                <input type="number" id="font-size" value="16" onchange="theme.changeFont('size', this.value)">
+                
+                <div class="flex autoformatting"><input type="checkbox" id="autoformat-check"><label for="autoformat">Enable Autoformat</label></div>
+            </div> 
         </div>
     </div>
     <div id="menu" class="modal">
@@ -342,6 +345,7 @@
             })
         }
     </script>
+    
 </body>
 
 </html>

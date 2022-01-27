@@ -294,24 +294,28 @@ const parser = {
         return result
     },
     smartSymbols: function () {
-        let str = parser.input.value.replace('--', '—').replace('...', '…')
-        str = str.replace(/(^')|((([\s{\[\(>]')|([\s>]"'))(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$))/gi,
-            function ($1$2) {
-                return $1$2.replace(/'/g, "\u2018");
-            }
-        )
-
-        str = str.replace(/'(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$)/gi, "\u2019")
-
-        str = str.replace(/(^")|((([\s{\[\(>]")|([\s>]'"))(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$))/gi,
-            function ($1$2) {
-                return $1$2.replace('"', "\u201c");
-            }
-        )
-
-        str = str.replace(/"(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$)/g, "\u201d");
-
-        return str
+        if (localStorage.autoformat === 'true') {
+            let str = parser.input.value.replace('--', '—').replace('...', '…')
+            str = str.replace(/(^')|((([\s{\[\(>]')|([\s>]"'))(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$))/gi,
+                function ($1$2) {
+                    return $1$2.replace(/'/g, "\u2018");
+                }
+            )
+    
+            str = str.replace(/'(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$)/gi, "\u2019")
+    
+            str = str.replace(/(^")|((([\s{\[\(>]")|([\s>]'"))(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$))/gi,
+                function ($1$2) {
+                    return $1$2.replace('"', "\u201c");
+                }
+            )
+    
+            str = str.replace(/"(?!([^<])*?>)(?!<script[^>]*?>)(?![^<]*?<\/script>|$)/g, "\u201d");
+    
+            return str
+        } else {
+            return parser.input.value
+        }
     },
     getDrafts: function (id) {
         let documents = localStorage.documents
